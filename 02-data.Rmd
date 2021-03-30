@@ -19,11 +19,11 @@ First we check if it is allowed to scrape the [Baseball Reference](https://www.b
 paths_allowed('https://www.baseball-reference.com')
 ```
 
-We can scrape the data from Year 1998 row of the Standard Batting table on the website for each individual player. For example, the batting for Derek Jeter can be found at https://www.baseball-reference.com/players/j/jeterde01.shtml. The entire list of players can be found in the ![folder](data/players_list/). 
+We can scrape the data from the row of Year 1998 of the Standard Batting table on the website for each individual player. For example, the batting for Derek Jeter can be found at https://www.baseball-reference.com/players/j/jeterde01.shtml. The entire list of players can be found in the ![folder](data/players_list/). 
 
 ```{r, eval=FALSE}
 
-## obtain batting data for players only do batting
+## obtain batting data for players who only do batting
 
 players_batting <- read_csv('data/players_list/players_batting_only.csv')
 
@@ -162,7 +162,7 @@ for (i in 1:n){
                '.shtml',
                sep = '')
   
-  # paths_allowed(url)
+# paths_allowed(url)
   
   web <- read_html(url)
   
