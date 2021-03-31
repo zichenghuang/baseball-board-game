@@ -9,7 +9,7 @@ site: bookdown::bookdown_site
 
 APBA (American Professional Baseball Association) baseball is a baseball board game that has been played by hardcore baseball fans by decades.  It touts itself as being extremely accurate and true-to-life.
 
-APBA makes "cards" for every major league baseball player for every season of major league baseball.  These cards are based on real life statistics.  You play the game by rolling dice and looking at the result on the cards (simplified description of the game).  The game is accurate enough that adjustments are even made based on the particular baseball stadium you choose to play in (so similar numbers of homeruns should occur in each ballpark in the game as they do in real life)
+APBA makes "cards" for every major league baseball player for every season of major league baseball.  These cards are based on real life statistics.  You play the game by rolling dice and looking at the result on the cards (simplified description of the game).  The game is accurate enough that adjustments are even made based on the particular baseball stadium you choose to play in (so similar numbers of homeruns should occur in each ballpark in the game as they do in real life).
 
 We have access to many scorecards of data from many times the board game was played (scorecards include how many at-bats players had in the game, how many hits they had, how many runs that pitchers gave up, etc.)
 
