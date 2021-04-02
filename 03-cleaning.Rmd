@@ -1,1 +1,40 @@
 # Data transformation
+
+```{r}
+library(tidyverse) # for working with data frames
+```
+
+
+```{r, eval=FALSE}
+## read in raw data scraped from web
+df_batting  <- read_csv('data/raw/data_batting_raw.csv')
+df_pitching <- read_csv('data/raw/data_pitching_raw.csv')
+
+## batting data clean up
+df_batting['AVG'] <- df_batting$H/df_batting$AB
+df_batting['SLG'] <- (df_batting$H-df_batting$`2B`-df_batting$`3B`-df_batting$HR+2*df_batting$`2B`+3*df_batting$`3B`+4*df_batting$HR)/df_batting$AB
+df_batting['OBA'] <- (df_batting$H+df_batting$BB+df_batting$HBP)/(df_batting$AB+df_batting$BB+df_batting$HBP)
+df_batting['SAC'] <- df_batting$SH+df_batting$SF
+
+df_batting <- 
+  df_batting %>% 
+  select(playerID, name, hits, 
+         AVG, SLG, OBA, G, AB, R, H, RBI, `2B`, `3B`, HR, SAC, SB, CS, SO, BB, HBP, TB) %>% 
+  arrange(playerID)
+
+# write_csv(df_batting, 'data/real/RealBatting.csv')
+
+
+## pitching data clean up
+
+df_pitching['ERA'] <- df_pitching$earned_run_avg
+df_pitching['AVG_against'] <- df_pitching$H/(df_pitching$H+3*df_pitching$IP)
+
+df_pitching <- 
+  df_pitching %>% 
+  select(playerID, name, throws, 
+         ERA, W, L, SV, AVG_against, G, GS, CG, IP, ER, H, SO, BB, HBP, WP, BK) %>% 
+  arrange(playerID)
+
+# write_csv(df_pitching, 'data/real/RealPitching.csv')
+```
