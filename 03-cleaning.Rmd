@@ -38,3 +38,12 @@ df_pitching <-
 
 # write_csv(df_pitching, 'data/real/RealPitching.csv')
 ```
+
+```{r}
+rhdf <- read_csv('data/real/RealBatting.csv')
+rpdf <- read_csv('data/real/RealPitching.csv')
+
+ghdf <- read_csv('data/game/GameBatting.csv')
+gpdf <- read_csv('data/game/GamePitching.csv')
+```
+
