@@ -1,6 +1,6 @@
 # Data transformation
 
-```{r}
+```{r echo=TRUE, message=FALSE}
 library(tidyverse) # for working with data frames
 ```
 
@@ -23,6 +23,7 @@ df_batting <-
          AVG, SLG, OBA, G, AB, R, H, RBI, `2B`, `3B`, HR, SAC, SB, CS, SO, BB, HBP, TB) %>% 
   arrange(playerID)
 
+# create file
 # write_csv(df_batting, 'data/real/RealBatting.csv')
 
 
@@ -37,10 +38,12 @@ df_pitching <-
          ERA, W, L, SV, AVG_against, G, GS, CG, IP, ER, H, SO, BB, HBP, WP, BK) %>% 
   arrange(playerID)
 
+# create file
 # write_csv(df_pitching, 'data/real/RealPitching.csv')
+
 ```
 
-```{r,message=FALSE}
+```{r echo = T, results = 'hide',message=FALSE}
 
 #defining dataframes
 
