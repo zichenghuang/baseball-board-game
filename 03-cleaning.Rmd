@@ -5,7 +5,8 @@ library(tidyverse) # for working with data frames
 ```
 
 
-```{r, eval=FALSE}
+```{r echo = T, results = 'hide',message=FALSE}
+
 ## read in raw data scraped from web
 df_batting  <- read_csv('data/raw/data_batting_raw.csv')
 df_pitching <- read_csv('data/raw/data_pitching_raw.csv')
@@ -39,11 +40,94 @@ df_pitching <-
 # write_csv(df_pitching, 'data/real/RealPitching.csv')
 ```
 
-```{r}
+```{r,message=FALSE}
+
+#defining dataframes
+
 rhdf <- read_csv('data/real/RealBatting.csv')
 rpdf <- read_csv('data/real/RealPitching.csv')
 
 ghdf <- read_csv('data/game/GameBatting.csv')
 gpdf <- read_csv('data/game/GamePitching.csv')
+
+#preparing to create new dataframe with both real and game data 
+#batting/hitting data
+
+ghdf[is.na(ghdf)] <- 0
+rhdf[is.na(rhdf)] <- 0
+rhdf$GameAB = ghdf$AB
+rhdf$GameH = ghdf$H
+rhdf$GameTB = ghdf$TB
+rhdf$GameG = ghdf$G
+rhdf$GameR = ghdf$R
+rhdf$GameRBI = ghdf$RBI
+rhdf$Game2B = ghdf$"2B"
+rhdf$Game3B = ghdf$"3B"
+rhdf$GameHR = ghdf$HR
+rhdf$GameSB = ghdf$SB
+
+#only want to work with this condition
+rhdf2 <- rhdf %>% filter(GameAB > 0 & AB > 0)
+
+#new columns added
+
+rhdf2$H_should_have = rhdf2$AVG * rhdf2$GameAB
+rhdf2$TB_should_have = rhdf2$SLG * rhdf2$GameAB
+rhdf2$R_should_have = rhdf2$R / rhdf2$G * rhdf2$GameG
+rhdf2$RBI_should_have = rhdf2$RBI / rhdf2$G * rhdf2$GameG
+rhdf2$"2B_should_have" = rhdf2$"2B" / rhdf2$AB * rhdf2$GameAB
+rhdf2$"3B_should_have" = rhdf2$"3B" / rhdf2$AB * rhdf2$GameAB
+rhdf2$HR_should_have = rhdf2$HR / rhdf2$AB * rhdf2$GameAB
+rhdf2$SB_should_have = rhdf2$SB / rhdf2$G * rhdf2$GameG
+
+rhdf2$H_deviation = rhdf2$GameH - rhdf2$H_should_have
+rhdf2$TB_deviation = rhdf2$GameTB - rhdf2$TB_should_have
+rhdf2$R_deviation = rhdf2$GameR - rhdf2$R_should_have
+rhdf2$RBI_deviation = rhdf2$GameRBI - rhdf2$RBI_should_have
+rhdf2$"2B_deviation" = rhdf2$Game2B - rhdf2$"2B_should_have"
+rhdf2$"3B_deviation" = rhdf2$Game3B - rhdf2$"3B_should_have"
+rhdf2$HR_deviation = rhdf2$GameHR - rhdf2$HR_should_have
+rhdf2$SB_deviation = rhdf2$GameSB - rhdf2$SB_should_have
+
+#added new combined dataframe to files
+
+#write_csv(rhdf2, 'data/combined/Batting.csv')
+
+#pitching data
+
+gpdf[is.na(gpdf)] <- 0
+rpdf[is.na(rpdf)] <- 0
+rpdf$GameG = gpdf$G
+rpdf$GameIP = gpdf$IP
+rpdf$GameER = gpdf$ER
+rpdf$GameHits = gpdf$Hits
+rpdf$GameSO = gpdf$SO
+rpdf$GameW = gpdf$Wins
+rpdf$GameL = gpdf$Losses
+rpdf$GameSV = gpdf$Saves
+rpdf$GameBB = gpdf$BB
+
+#new columns added
+
+rpdf$ER_should_have = rpdf$ERA * rpdf$GameIP / 9
+rpdf$Hits_should_have = rpdf$H / rpdf$IP * rpdf$GameIP
+rpdf$SO_should_have = rpdf$SO / rpdf$IP * rpdf$GameIP
+rpdf$W_should_have = rpdf$W / rpdf$G * rpdf$GameG
+rpdf$L_should_have = rpdf$L / rpdf$G * rpdf$GameG
+rpdf$SV_should_have = rpdf$SV / rpdf$G * rpdf$GameG
+rpdf$BB_should_have = rpdf$BB / rpdf$IP * rpdf$GameIP
+
+rpdf$ER_deviation = rpdf$GameER - rpdf$ER_should_have
+rpdf$Hits_deviation = rpdf$GameHits - rpdf$Hits_should_have
+rpdf$SO_deviation = rpdf$GameSO - rpdf$SO_should_have
+rpdf$W_deviation = rpdf$GameW - rpdf$W_should_have
+rpdf$L_deviation = rpdf$GameL - rpdf$L_should_have
+rpdf$SV_deviation = rpdf$GameSV - rpdf$SV_should_have
+rpdf$BB_deviation = rpdf$GameBB - rpdf$BB_should_have
+
+#added new combined dataframe to files
+
+#write_csv(rpdf, 'data/combined/Pitching.csv')
+
 ```
 

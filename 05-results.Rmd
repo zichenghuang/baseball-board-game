@@ -1,1 +1,27 @@
 # Results
+
+```{r}
+library(ggplot2)
+p <- ggplot(rhdf2, aes(x=H_deviation)) + geom_boxplot(fill='#A4A4A4', color="darkred") + labs(title = 'Difference between player hits in the game vs. real life')
+p
+p <- ggplot(rhdf2, aes(x=TB_deviation)) + geom_boxplot(fill='#A4A4A4', color="darkred") + labs(title = 'Difference between player total bases in the game vs. real life')
+p
+p <- ggplot(rpdf, aes(x=ER_deviation)) + geom_boxplot(fill='#A4A4A4', color="darkred") + labs(title = 'Difference between pitcher runs given up in the game vs. real life')
+p
+p <- ggplot(rpdf, aes(x=Hits_deviation)) + geom_boxplot(fill='#A4A4A4', color="darkred") + labs(title = 'Difference between pitcher hits given up in the game vs. real life')
+p
+p <- ggplot(rpdf, aes(x=SO_deviation)) + geom_boxplot(fill='#A4A4A4', color="darkred") + labs(title = 'Difference between pitcher strikeouts in the game vs. real life')
+p
+
+# Maybe split up by Left and Right Handed to see if more of a difference?
+# Make interactive so easy to see who the outliers are?
+
+# Chi-Squared test
+
+library(GGally)
+#first one has an error
+#ggparcoord(data = rhdf2, columns = c(41, 42, 43, 44, 45, 46, 47, 48), scale="uniminmax", splineFactor = 10, alphaLines = 0.3) + xlab("") + ylab("") 
+ggparcoord(data = rpdf, columns = c(35, 36, 37, 38, 39, 40, 41), scale="uniminmax", splineFactor = 10, alphaLines = 0.3) + xlab("") + ylab("")
+
+```
+
