@@ -1,1 +1,34 @@
 # Missing values
+
+```{r}
+#load necessary packages
+library(ggplot2)
+library(visdat)
+library(naniar)
+```
+Missing values can complicate data exploration, therefore our aim is to find and remove them.
+
+```{r echo=TRUE}
+
+#working with both combined data sets
+#read both data files
+
+combh <- read_csv("data/combined/Batting.csv")
+combp <- read_csv("data/combined/Pitching.csv")
+
+#number of NA's in data
+
+colSums(is.na(combh))
+colSums(is.na(combp))
+
+```
+We can see that there are no NA values in either of the data sets, hence there is no missing data.
+Plotting the two data sets asserts this.
+
+```{r}
+vis_miss(combh)
+vis_miss(combp)
+
+gg_miss_var(combh)
+gg_miss_var(combp)
+```

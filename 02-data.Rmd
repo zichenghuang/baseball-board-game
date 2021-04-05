@@ -6,7 +6,7 @@ In order to extract the data needed from [Baseball Reference](https://www.baseba
 
 These packages are required.
 
-```{r}
+```{r,message=FALSE}
 library(tidyverse) # for working with data frames
 library(robotstxt) # for checking if we are allowed to scrape the website
 library(rvest)     # for web scraping
@@ -15,13 +15,13 @@ library(stringr)   # for string manipulations
 
 First, we check if it is allowed to scrape the [Baseball Reference](https://www.baseball-reference.com) website.
 
-```{r}
+```{r echo=TRUE}
 paths_allowed('https://www.baseball-reference.com')
 ```
 
 We can scrape the data from the row of Year 1998 of the Standard Batting table on the website for each individual player. For example, the batting for Derek Jeter can be found at https://www.baseball-reference.com/players/j/jeterde01.shtml. The entire list of players can be found in the ![folder](data/players_list/). 
 
-```{r, eval=FALSE}
+```{r echo = T, results = 'hide',message=FALSE}
 
 ## obtain batting data for players who only do batting
 
@@ -40,6 +40,8 @@ for (i in 1:n){
                sep = '')
   
   # paths_allowed(url)
+  
+## creating variables  
   
   web <- read_html(url)
   
@@ -74,8 +76,7 @@ for (i in 1:n){
   
 }
 
-
-## obtain batting data for players do both batting and pitching
+## obtain batting data for players who do both batting and pitching
 
 players_batting <- read_csv('data/players_list/players_batting_pitching.csv')
 
@@ -94,6 +95,8 @@ for (i in 1:n){
   # paths_allowed(url)
   
   web <- read_html(url)
+  
+## creating variables  
   
   name <- 
     web %>% 
@@ -144,9 +147,12 @@ i <- 7:30
 df_batting[, i] <- sapply(df_batting[, i], as.numeric)
 
 # convert the accented characters to unaccented ones
+
 df_batting$name <- iconv(df_batting$name, from='UTF-8', to='ASCII//TRANSLIT')
 
-write_csv(df_batting, 'data/raw/data_batting_raw.csv')
+#create file
+
+#write_csv(df_batting, 'data/raw/data_batting_raw.csv')
 
 
 ## obtain pitching data
@@ -168,7 +174,9 @@ for (i in 1:n){
 # paths_allowed(url)
   
   web <- read_html(url)
-  
+ 
+## creating variables  
+   
   name <- 
     web %>% 
     html_nodes(xpath = '//*[@id="meta"]/div[2]/h1/span') %>% 
@@ -205,9 +213,12 @@ i <- 7:36
 df_pitching[, i] <- sapply(df_pitching[, i], as.numeric)
 
 # convert the accented characters to unaccented ones
+
 df_pitching$name <- iconv(df_pitching$name, from='UTF-8', to='ASCII//TRANSLIT')
 
-write_csv(df_pitching, 'data/raw/data_pitching_raw.csv')
+#create file
+
+#write_csv(df_pitching, 'data/raw/data_pitching_raw.csv')
 
 ```
 
