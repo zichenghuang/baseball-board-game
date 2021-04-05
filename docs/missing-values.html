@@ -161,6 +161,62 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="missing-values" class="section level1" number="4">
 <h1><span class="header-section-number">Chapter 4</span> Missing values</h1>
+<p>Missing values can complicate data exploration, therefore our aim is to find and remove them.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="missing-values.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#working with both combined data sets</span></span>
+<span id="cb7-2"><a href="missing-values.html#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#read both data files</span></span>
+<span id="cb7-3"><a href="missing-values.html#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="missing-values.html#cb7-4" aria-hidden="true" tabindex="-1"></a>combh <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/combined/Batting.csv&quot;</span>)</span>
+<span id="cb7-5"><a href="missing-values.html#cb7-5" aria-hidden="true" tabindex="-1"></a>combp <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/combined/Pitching.csv&quot;</span>)</span>
+<span id="cb7-6"><a href="missing-values.html#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="missing-values.html#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#number of NA&#39;s in data</span></span>
+<span id="cb7-8"><a href="missing-values.html#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="missing-values.html#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(combh))</span></code></pre></div>
+<pre><code>##        playerID            name            hits             AVG             SLG 
+##               0               0               0               0               0 
+##             OBA               G              AB               R               H 
+##               0               0               0               0               0 
+##             RBI              2B              3B              HR             SAC 
+##               0               0               0               0               0 
+##              SB              CS              SO              BB             HBP 
+##               0               0               0               0               0 
+##              TB          GameAB           GameH          GameTB           GameG 
+##               0               0               0               0               0 
+##           GameR         GameRBI          Game2B          Game3B          GameHR 
+##               0               0               0               0               0 
+##          GameSB   H_should_have  TB_should_have   R_should_have RBI_should_have 
+##               0               0               0               0               0 
+##  2B_should_have  3B_should_have  HR_should_have  SB_should_have     H_deviation 
+##               0               0               0               0               0 
+##    TB_deviation     R_deviation   RBI_deviation    2B_deviation    3B_deviation 
+##               0               0               0               0               0 
+##    HR_deviation    SB_deviation 
+##               0               0</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="missing-values.html#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(combp))</span></code></pre></div>
+<pre><code>##         playerID             name           throws              ERA 
+##                0                0                0                0 
+##                W                L               SV      AVG_against 
+##                0                0                0                0 
+##                G               GS               CG               IP 
+##                0                0                0                0 
+##               ER                H               SO               BB 
+##                0                0                0                0 
+##              HBP               WP               BK            GameG 
+##                0                0                0                0 
+##           GameIP           GameER         GameHits           GameSO 
+##                0                0                0                0 
+##            GameW            GameL           GameSV           GameBB 
+##                0                0                0                0 
+##   ER_should_have Hits_should_have   SO_should_have    W_should_have 
+##                0                0                0                0 
+##    L_should_have   SV_should_have   BB_should_have     ER_deviation 
+##                0                0                0                0 
+##   Hits_deviation     SO_deviation      W_deviation      L_deviation 
+##                0                0                0                0 
+##     SV_deviation     BB_deviation 
+##                0                0</code></pre>
+<p>We can see that there are no NA values in either of the data sets, hence there is no missing data.
+Plotting the two data sets asserts this.</p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-13-1.png" width="672" /><img src="finalproj_files/figure-html/unnamed-chunk-13-2.png" width="672" /><img src="finalproj_files/figure-html/unnamed-chunk-13-3.png" width="672" /><img src="finalproj_files/figure-html/unnamed-chunk-13-4.png" width="672" /></p>
 
 </div>
             </section>

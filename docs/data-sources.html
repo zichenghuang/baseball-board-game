@@ -165,8 +165,205 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>In order to extract the data needed from <a href="https://www.baseball-reference.com">Baseball Reference</a>, we performed web scraping to pull the batting and pitching data in the year 1998 for the players that appear in the 100 games of APBA Baseball.</p>
 <p>These packages are required.</p>
 <p>First, we check if it is allowed to scrape the <a href="https://www.baseball-reference.com">Baseball Reference</a> website.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="data-sources.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paths_allowed</span>(<span class="st">&#39;https://www.baseball-reference.com&#39;</span>)</span></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
 <p>We can scrape the data from the row of Year 1998 of the Standard Batting table on the website for each individual player. For example, the batting for Derek Jeter can be found at <a href="https://www.baseball-reference.com/players/j/jeterde01.shtml" class="uri">https://www.baseball-reference.com/players/j/jeterde01.shtml</a>. The entire list of players can be found in the <img src="data/players_list/" alt="folder" />.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="data-sources.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">## obtain batting data for players who only do batting</span></span>
+<span id="cb3-2"><a href="data-sources.html#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="data-sources.html#cb3-3" aria-hidden="true" tabindex="-1"></a>players_batting <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&#39;data/players_list/players_batting_only.csv&#39;</span>)</span>
+<span id="cb3-4"><a href="data-sources.html#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="data-sources.html#cb3-5" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(players_batting)</span>
+<span id="cb3-6"><a href="data-sources.html#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="data-sources.html#cb3-7" aria-hidden="true" tabindex="-1"></a>df_batting_only <span class="ot">=</span> <span class="fu">data.frame</span>()</span>
+<span id="cb3-8"><a href="data-sources.html#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="data-sources.html#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n){</span>
+<span id="cb3-10"><a href="data-sources.html#cb3-10" aria-hidden="true" tabindex="-1"></a>  url <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">&#39;https://www.baseball-reference.com/players/&#39;</span>,</span>
+<span id="cb3-11"><a href="data-sources.html#cb3-11" aria-hidden="true" tabindex="-1"></a>               <span class="fu">substr</span>(players_batting<span class="sc">$</span>playerID[i], <span class="dv">1</span>, <span class="dv">1</span>),</span>
+<span id="cb3-12"><a href="data-sources.html#cb3-12" aria-hidden="true" tabindex="-1"></a>               <span class="st">&#39;/&#39;</span>,</span>
+<span id="cb3-13"><a href="data-sources.html#cb3-13" aria-hidden="true" tabindex="-1"></a>               players_batting<span class="sc">$</span>playerID[i],</span>
+<span id="cb3-14"><a href="data-sources.html#cb3-14" aria-hidden="true" tabindex="-1"></a>               <span class="st">&#39;.shtml&#39;</span>,</span>
+<span id="cb3-15"><a href="data-sources.html#cb3-15" aria-hidden="true" tabindex="-1"></a>               <span class="at">sep =</span> <span class="st">&#39;&#39;</span>)</span>
+<span id="cb3-16"><a href="data-sources.html#cb3-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-17"><a href="data-sources.html#cb3-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># paths_allowed(url)</span></span>
+<span id="cb3-18"><a href="data-sources.html#cb3-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-19"><a href="data-sources.html#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="do">## creating variables  </span></span>
+<span id="cb3-20"><a href="data-sources.html#cb3-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-21"><a href="data-sources.html#cb3-21" aria-hidden="true" tabindex="-1"></a>  web <span class="ot">&lt;-</span> <span class="fu">read_html</span>(url)</span>
+<span id="cb3-22"><a href="data-sources.html#cb3-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-23"><a href="data-sources.html#cb3-23" aria-hidden="true" tabindex="-1"></a>  name <span class="ot">&lt;-</span> </span>
+<span id="cb3-24"><a href="data-sources.html#cb3-24" aria-hidden="true" tabindex="-1"></a>    web <span class="sc">%&gt;%</span> </span>
+<span id="cb3-25"><a href="data-sources.html#cb3-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_nodes</span>(<span class="at">xpath =</span> <span class="st">&#39;//*[@id=&quot;meta&quot;]/div[2]/h1/span&#39;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-26"><a href="data-sources.html#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_text</span>()</span>
+<span id="cb3-27"><a href="data-sources.html#cb3-27" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-28"><a href="data-sources.html#cb3-28" aria-hidden="true" tabindex="-1"></a>  hits <span class="ot">&lt;-</span> </span>
+<span id="cb3-29"><a href="data-sources.html#cb3-29" aria-hidden="true" tabindex="-1"></a>    web <span class="sc">%&gt;%</span> </span>
+<span id="cb3-30"><a href="data-sources.html#cb3-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_nodes</span>(<span class="at">xpath =</span> <span class="st">&#39;//*[@id=&quot;meta&quot;]/div[2]/p[2]&#39;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-31"><a href="data-sources.html#cb3-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_text</span>() <span class="sc">%&gt;%</span> <span class="fu">str_extract</span>(<span class="fu">regex</span>(<span class="st">&#39;Bats:.*&#39;</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-32"><a href="data-sources.html#cb3-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">str_remove_all</span>(<span class="st">&#39;Bats: &#39;</span>)</span>
+<span id="cb3-33"><a href="data-sources.html#cb3-33" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-34"><a href="data-sources.html#cb3-34" aria-hidden="true" tabindex="-1"></a>  columns <span class="ot">&lt;-</span> </span>
+<span id="cb3-35"><a href="data-sources.html#cb3-35" aria-hidden="true" tabindex="-1"></a>    web <span class="sc">%&gt;%</span> </span>
+<span id="cb3-36"><a href="data-sources.html#cb3-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_nodes</span>(<span class="at">xpath =</span> <span class="st">&#39;//*[@id=&quot;batting_standard.1998&quot;]/td&#39;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-37"><a href="data-sources.html#cb3-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_attr</span>(<span class="st">&#39;data-stat&#39;</span>)</span>
+<span id="cb3-38"><a href="data-sources.html#cb3-38" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-39"><a href="data-sources.html#cb3-39" aria-hidden="true" tabindex="-1"></a>  values <span class="ot">&lt;-</span> </span>
+<span id="cb3-40"><a href="data-sources.html#cb3-40" aria-hidden="true" tabindex="-1"></a>    web <span class="sc">%&gt;%</span> </span>
+<span id="cb3-41"><a href="data-sources.html#cb3-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_nodes</span>(<span class="at">xpath =</span> <span class="st">&#39;//*[@id=&quot;batting_standard.1998&quot;]/td&#39;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-42"><a href="data-sources.html#cb3-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_text</span>()</span>
+<span id="cb3-43"><a href="data-sources.html#cb3-43" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-44"><a href="data-sources.html#cb3-44" aria-hidden="true" tabindex="-1"></a>  df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(columns, values)</span>
+<span id="cb3-45"><a href="data-sources.html#cb3-45" aria-hidden="true" tabindex="-1"></a>  df[<span class="st">&#39;playerID&#39;</span>] <span class="ot">&lt;-</span> players_batting<span class="sc">$</span>playerID[i]</span>
+<span id="cb3-46"><a href="data-sources.html#cb3-46" aria-hidden="true" tabindex="-1"></a>  df[<span class="st">&#39;name&#39;</span>] <span class="ot">&lt;-</span> name</span>
+<span id="cb3-47"><a href="data-sources.html#cb3-47" aria-hidden="true" tabindex="-1"></a>  df[<span class="st">&#39;hits&#39;</span>] <span class="ot">&lt;-</span> hits</span>
+<span id="cb3-48"><a href="data-sources.html#cb3-48" aria-hidden="true" tabindex="-1"></a>  df <span class="ot">&lt;-</span> <span class="fu">pivot_wider</span>(df, <span class="at">names_from =</span> columns, <span class="at">values_from =</span> values)</span>
+<span id="cb3-49"><a href="data-sources.html#cb3-49" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-50"><a href="data-sources.html#cb3-50" aria-hidden="true" tabindex="-1"></a>  df_batting_only <span class="ot">=</span> <span class="fu">rbind</span>(df_batting_only, df)</span>
+<span id="cb3-51"><a href="data-sources.html#cb3-51" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-52"><a href="data-sources.html#cb3-52" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-53"><a href="data-sources.html#cb3-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-54"><a href="data-sources.html#cb3-54" aria-hidden="true" tabindex="-1"></a><span class="do">## obtain batting data for players who do both batting and pitching</span></span>
+<span id="cb3-55"><a href="data-sources.html#cb3-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-56"><a href="data-sources.html#cb3-56" aria-hidden="true" tabindex="-1"></a>players_batting <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&#39;data/players_list/players_batting_pitching.csv&#39;</span>)</span>
+<span id="cb3-57"><a href="data-sources.html#cb3-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-58"><a href="data-sources.html#cb3-58" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(players_batting)</span>
+<span id="cb3-59"><a href="data-sources.html#cb3-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-60"><a href="data-sources.html#cb3-60" aria-hidden="true" tabindex="-1"></a>df_batting_pitching <span class="ot">=</span> <span class="fu">data.frame</span>()</span>
+<span id="cb3-61"><a href="data-sources.html#cb3-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-62"><a href="data-sources.html#cb3-62" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n){</span>
+<span id="cb3-63"><a href="data-sources.html#cb3-63" aria-hidden="true" tabindex="-1"></a>  url <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">&#39;https://www.baseball-reference.com/players/&#39;</span>,</span>
+<span id="cb3-64"><a href="data-sources.html#cb3-64" aria-hidden="true" tabindex="-1"></a>               <span class="fu">substr</span>(players_batting<span class="sc">$</span>playerID[i], <span class="dv">1</span>, <span class="dv">1</span>),</span>
+<span id="cb3-65"><a href="data-sources.html#cb3-65" aria-hidden="true" tabindex="-1"></a>               <span class="st">&#39;/&#39;</span>,</span>
+<span id="cb3-66"><a href="data-sources.html#cb3-66" aria-hidden="true" tabindex="-1"></a>               players_batting<span class="sc">$</span>playerID[i],</span>
+<span id="cb3-67"><a href="data-sources.html#cb3-67" aria-hidden="true" tabindex="-1"></a>               <span class="st">&#39;.shtml&#39;</span>,</span>
+<span id="cb3-68"><a href="data-sources.html#cb3-68" aria-hidden="true" tabindex="-1"></a>               <span class="at">sep =</span> <span class="st">&#39;&#39;</span>)</span>
+<span id="cb3-69"><a href="data-sources.html#cb3-69" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-70"><a href="data-sources.html#cb3-70" aria-hidden="true" tabindex="-1"></a>  <span class="co"># paths_allowed(url)</span></span>
+<span id="cb3-71"><a href="data-sources.html#cb3-71" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-72"><a href="data-sources.html#cb3-72" aria-hidden="true" tabindex="-1"></a>  web <span class="ot">&lt;-</span> <span class="fu">read_html</span>(url)</span>
+<span id="cb3-73"><a href="data-sources.html#cb3-73" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-74"><a href="data-sources.html#cb3-74" aria-hidden="true" tabindex="-1"></a><span class="do">## creating variables  </span></span>
+<span id="cb3-75"><a href="data-sources.html#cb3-75" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-76"><a href="data-sources.html#cb3-76" aria-hidden="true" tabindex="-1"></a>  name <span class="ot">&lt;-</span> </span>
+<span id="cb3-77"><a href="data-sources.html#cb3-77" aria-hidden="true" tabindex="-1"></a>    web <span class="sc">%&gt;%</span> </span>
+<span id="cb3-78"><a href="data-sources.html#cb3-78" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_nodes</span>(<span class="at">xpath =</span> <span class="st">&#39;//*[@id=&quot;meta&quot;]/div[2]/h1/span&#39;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-79"><a href="data-sources.html#cb3-79" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_text</span>()</span>
+<span id="cb3-80"><a href="data-sources.html#cb3-80" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-81"><a href="data-sources.html#cb3-81" aria-hidden="true" tabindex="-1"></a>  hits <span class="ot">&lt;-</span> </span>
+<span id="cb3-82"><a href="data-sources.html#cb3-82" aria-hidden="true" tabindex="-1"></a>    web <span class="sc">%&gt;%</span> </span>
+<span id="cb3-83"><a href="data-sources.html#cb3-83" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_nodes</span>(<span class="at">xpath =</span> <span class="st">&#39;//*[@id=&quot;meta&quot;]/div[2]/p[2]&#39;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-84"><a href="data-sources.html#cb3-84" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_text</span>() <span class="sc">%&gt;%</span> <span class="fu">str_extract</span>(<span class="fu">regex</span>(<span class="st">&#39;Bats:.*&#39;</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-85"><a href="data-sources.html#cb3-85" aria-hidden="true" tabindex="-1"></a>    <span class="fu">str_remove_all</span>(<span class="st">&#39;Bats: &#39;</span>)</span>
+<span id="cb3-86"><a href="data-sources.html#cb3-86" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-87"><a href="data-sources.html#cb3-87" aria-hidden="true" tabindex="-1"></a>  columns <span class="ot">&lt;-</span> </span>
+<span id="cb3-88"><a href="data-sources.html#cb3-88" aria-hidden="true" tabindex="-1"></a>    web <span class="sc">%&gt;%</span> </span>
+<span id="cb3-89"><a href="data-sources.html#cb3-89" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_nodes</span>(<span class="at">xpath =</span> <span class="st">&#39;//comment()&#39;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-90"><a href="data-sources.html#cb3-90" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_text</span>() <span class="sc">%&gt;%</span>              <span class="co"># extract comment text</span></span>
+<span id="cb3-91"><a href="data-sources.html#cb3-91" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste</span>(<span class="at">collapse =</span> <span class="st">&#39;&#39;</span>) <span class="sc">%&gt;%</span>     <span class="co"># collapse to a single string</span></span>
+<span id="cb3-92"><a href="data-sources.html#cb3-92" aria-hidden="true" tabindex="-1"></a>    <span class="fu">read_html</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb3-93"><a href="data-sources.html#cb3-93" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_nodes</span>(<span class="at">xpath =</span> <span class="st">&#39;//*[@id=&quot;batting_standard.1998&quot;]/td&#39;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-94"><a href="data-sources.html#cb3-94" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_attr</span>(<span class="st">&#39;data-stat&#39;</span>)</span>
+<span id="cb3-95"><a href="data-sources.html#cb3-95" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-96"><a href="data-sources.html#cb3-96" aria-hidden="true" tabindex="-1"></a>  values <span class="ot">&lt;-</span> </span>
+<span id="cb3-97"><a href="data-sources.html#cb3-97" aria-hidden="true" tabindex="-1"></a>    web <span class="sc">%&gt;%</span> </span>
+<span id="cb3-98"><a href="data-sources.html#cb3-98" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_nodes</span>(<span class="at">xpath =</span> <span class="st">&#39;//comment()&#39;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-99"><a href="data-sources.html#cb3-99" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_text</span>() <span class="sc">%&gt;%</span>              <span class="co"># extract comment text</span></span>
+<span id="cb3-100"><a href="data-sources.html#cb3-100" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste</span>(<span class="at">collapse =</span> <span class="st">&#39;&#39;</span>) <span class="sc">%&gt;%</span>     <span class="co"># collapse to a single string</span></span>
+<span id="cb3-101"><a href="data-sources.html#cb3-101" aria-hidden="true" tabindex="-1"></a>    <span class="fu">read_html</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb3-102"><a href="data-sources.html#cb3-102" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_nodes</span>(<span class="at">xpath =</span> <span class="st">&#39;//*[@id=&quot;batting_standard.1998&quot;]/td&#39;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-103"><a href="data-sources.html#cb3-103" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_text</span>()</span>
+<span id="cb3-104"><a href="data-sources.html#cb3-104" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-105"><a href="data-sources.html#cb3-105" aria-hidden="true" tabindex="-1"></a>  df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(columns, values)</span>
+<span id="cb3-106"><a href="data-sources.html#cb3-106" aria-hidden="true" tabindex="-1"></a>  df[<span class="st">&#39;playerID&#39;</span>] <span class="ot">&lt;-</span> players_batting<span class="sc">$</span>playerID[i]</span>
+<span id="cb3-107"><a href="data-sources.html#cb3-107" aria-hidden="true" tabindex="-1"></a>  df[<span class="st">&#39;name&#39;</span>] <span class="ot">&lt;-</span> name</span>
+<span id="cb3-108"><a href="data-sources.html#cb3-108" aria-hidden="true" tabindex="-1"></a>  df[<span class="st">&#39;hits&#39;</span>] <span class="ot">&lt;-</span> hits</span>
+<span id="cb3-109"><a href="data-sources.html#cb3-109" aria-hidden="true" tabindex="-1"></a>  df <span class="ot">&lt;-</span> <span class="fu">pivot_wider</span>(df, <span class="at">names_from =</span> columns, <span class="at">values_from =</span> values)</span>
+<span id="cb3-110"><a href="data-sources.html#cb3-110" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-111"><a href="data-sources.html#cb3-111" aria-hidden="true" tabindex="-1"></a>  df_batting_pitching <span class="ot">=</span> <span class="fu">rbind</span>(df_batting_pitching, df)</span>
+<span id="cb3-112"><a href="data-sources.html#cb3-112" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-113"><a href="data-sources.html#cb3-113" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-114"><a href="data-sources.html#cb3-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-115"><a href="data-sources.html#cb3-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-116"><a href="data-sources.html#cb3-116" aria-hidden="true" tabindex="-1"></a><span class="do">## combine bating data</span></span>
+<span id="cb3-117"><a href="data-sources.html#cb3-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-118"><a href="data-sources.html#cb3-118" aria-hidden="true" tabindex="-1"></a>df_batting <span class="ot">=</span> <span class="fu">rbind</span>(df_batting_only, df_batting_pitching)</span>
+<span id="cb3-119"><a href="data-sources.html#cb3-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-120"><a href="data-sources.html#cb3-120" aria-hidden="true" tabindex="-1"></a>i <span class="ot">&lt;-</span> <span class="dv">7</span><span class="sc">:</span><span class="dv">30</span></span>
+<span id="cb3-121"><a href="data-sources.html#cb3-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-122"><a href="data-sources.html#cb3-122" aria-hidden="true" tabindex="-1"></a>df_batting[, i] <span class="ot">&lt;-</span> <span class="fu">sapply</span>(df_batting[, i], as.numeric)</span>
+<span id="cb3-123"><a href="data-sources.html#cb3-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-124"><a href="data-sources.html#cb3-124" aria-hidden="true" tabindex="-1"></a><span class="co"># convert the accented characters to unaccented ones</span></span>
+<span id="cb3-125"><a href="data-sources.html#cb3-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-126"><a href="data-sources.html#cb3-126" aria-hidden="true" tabindex="-1"></a>df_batting<span class="sc">$</span>name <span class="ot">&lt;-</span> <span class="fu">iconv</span>(df_batting<span class="sc">$</span>name, <span class="at">from=</span><span class="st">&#39;UTF-8&#39;</span>, <span class="at">to=</span><span class="st">&#39;ASCII//TRANSLIT&#39;</span>)</span>
+<span id="cb3-127"><a href="data-sources.html#cb3-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-128"><a href="data-sources.html#cb3-128" aria-hidden="true" tabindex="-1"></a><span class="co">#create file</span></span>
+<span id="cb3-129"><a href="data-sources.html#cb3-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-130"><a href="data-sources.html#cb3-130" aria-hidden="true" tabindex="-1"></a><span class="co">#write_csv(df_batting, &#39;data/raw/data_batting_raw.csv&#39;)</span></span>
+<span id="cb3-131"><a href="data-sources.html#cb3-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-132"><a href="data-sources.html#cb3-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-133"><a href="data-sources.html#cb3-133" aria-hidden="true" tabindex="-1"></a><span class="do">## obtain pitching data</span></span>
+<span id="cb3-134"><a href="data-sources.html#cb3-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-135"><a href="data-sources.html#cb3-135" aria-hidden="true" tabindex="-1"></a>players_pitching <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&#39;data/players_list/players_pitching.csv&#39;</span>)</span>
+<span id="cb3-136"><a href="data-sources.html#cb3-136" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-137"><a href="data-sources.html#cb3-137" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(players_pitching)</span>
+<span id="cb3-138"><a href="data-sources.html#cb3-138" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-139"><a href="data-sources.html#cb3-139" aria-hidden="true" tabindex="-1"></a>df_pitching <span class="ot">=</span> <span class="fu">data.frame</span>()</span>
+<span id="cb3-140"><a href="data-sources.html#cb3-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-141"><a href="data-sources.html#cb3-141" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n){</span>
+<span id="cb3-142"><a href="data-sources.html#cb3-142" aria-hidden="true" tabindex="-1"></a>  url <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">&#39;https://www.baseball-reference.com/players/&#39;</span>,</span>
+<span id="cb3-143"><a href="data-sources.html#cb3-143" aria-hidden="true" tabindex="-1"></a>               <span class="fu">substr</span>(players_pitching<span class="sc">$</span>playerID[i], <span class="dv">1</span>, <span class="dv">1</span>),</span>
+<span id="cb3-144"><a href="data-sources.html#cb3-144" aria-hidden="true" tabindex="-1"></a>               <span class="st">&#39;/&#39;</span>,</span>
+<span id="cb3-145"><a href="data-sources.html#cb3-145" aria-hidden="true" tabindex="-1"></a>               players_pitching<span class="sc">$</span>playerID[i],</span>
+<span id="cb3-146"><a href="data-sources.html#cb3-146" aria-hidden="true" tabindex="-1"></a>               <span class="st">&#39;.shtml&#39;</span>,</span>
+<span id="cb3-147"><a href="data-sources.html#cb3-147" aria-hidden="true" tabindex="-1"></a>               <span class="at">sep =</span> <span class="st">&#39;&#39;</span>)</span>
+<span id="cb3-148"><a href="data-sources.html#cb3-148" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-149"><a href="data-sources.html#cb3-149" aria-hidden="true" tabindex="-1"></a><span class="co"># paths_allowed(url)</span></span>
+<span id="cb3-150"><a href="data-sources.html#cb3-150" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-151"><a href="data-sources.html#cb3-151" aria-hidden="true" tabindex="-1"></a>  web <span class="ot">&lt;-</span> <span class="fu">read_html</span>(url)</span>
+<span id="cb3-152"><a href="data-sources.html#cb3-152" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb3-153"><a href="data-sources.html#cb3-153" aria-hidden="true" tabindex="-1"></a><span class="do">## creating variables  </span></span>
+<span id="cb3-154"><a href="data-sources.html#cb3-154" aria-hidden="true" tabindex="-1"></a>   </span>
+<span id="cb3-155"><a href="data-sources.html#cb3-155" aria-hidden="true" tabindex="-1"></a>  name <span class="ot">&lt;-</span> </span>
+<span id="cb3-156"><a href="data-sources.html#cb3-156" aria-hidden="true" tabindex="-1"></a>    web <span class="sc">%&gt;%</span> </span>
+<span id="cb3-157"><a href="data-sources.html#cb3-157" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_nodes</span>(<span class="at">xpath =</span> <span class="st">&#39;//*[@id=&quot;meta&quot;]/div[2]/h1/span&#39;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-158"><a href="data-sources.html#cb3-158" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_text</span>()</span>
+<span id="cb3-159"><a href="data-sources.html#cb3-159" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-160"><a href="data-sources.html#cb3-160" aria-hidden="true" tabindex="-1"></a>  throws <span class="ot">&lt;-</span> </span>
+<span id="cb3-161"><a href="data-sources.html#cb3-161" aria-hidden="true" tabindex="-1"></a>    web <span class="sc">%&gt;%</span> <span class="fu">html_nodes</span>(<span class="at">xpath =</span> <span class="st">&#39;//*[@id=&quot;meta&quot;]/div[2]/p[2]&#39;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-162"><a href="data-sources.html#cb3-162" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_text</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb3-163"><a href="data-sources.html#cb3-163" aria-hidden="true" tabindex="-1"></a>    <span class="fu">str_extract</span>(<span class="fu">regex</span>(<span class="st">&#39;Throws:.*&#39;</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-164"><a href="data-sources.html#cb3-164" aria-hidden="true" tabindex="-1"></a>    <span class="fu">str_remove_all</span>(<span class="st">&#39;Throws: &#39;</span>)</span>
+<span id="cb3-165"><a href="data-sources.html#cb3-165" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-166"><a href="data-sources.html#cb3-166" aria-hidden="true" tabindex="-1"></a>  columns <span class="ot">&lt;-</span> </span>
+<span id="cb3-167"><a href="data-sources.html#cb3-167" aria-hidden="true" tabindex="-1"></a>    web <span class="sc">%&gt;%</span> </span>
+<span id="cb3-168"><a href="data-sources.html#cb3-168" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_nodes</span>(<span class="at">xpath =</span> <span class="st">&#39;//*[@id=&quot;pitching_standard.1998&quot;]/td&#39;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-169"><a href="data-sources.html#cb3-169" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_attr</span>(<span class="st">&#39;data-stat&#39;</span>)</span>
+<span id="cb3-170"><a href="data-sources.html#cb3-170" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-171"><a href="data-sources.html#cb3-171" aria-hidden="true" tabindex="-1"></a>  values <span class="ot">&lt;-</span> </span>
+<span id="cb3-172"><a href="data-sources.html#cb3-172" aria-hidden="true" tabindex="-1"></a>    web <span class="sc">%&gt;%</span> </span>
+<span id="cb3-173"><a href="data-sources.html#cb3-173" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_nodes</span>(<span class="at">xpath =</span> <span class="st">&#39;//*[@id=&quot;pitching_standard.1998&quot;]/td&#39;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-174"><a href="data-sources.html#cb3-174" aria-hidden="true" tabindex="-1"></a>    <span class="fu">html_text</span>()</span>
+<span id="cb3-175"><a href="data-sources.html#cb3-175" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-176"><a href="data-sources.html#cb3-176" aria-hidden="true" tabindex="-1"></a>  df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(columns, values)</span>
+<span id="cb3-177"><a href="data-sources.html#cb3-177" aria-hidden="true" tabindex="-1"></a>  df[<span class="st">&#39;playerID&#39;</span>] <span class="ot">&lt;-</span> players_pitching<span class="sc">$</span>playerID[i]</span>
+<span id="cb3-178"><a href="data-sources.html#cb3-178" aria-hidden="true" tabindex="-1"></a>  df[<span class="st">&#39;name&#39;</span>] <span class="ot">&lt;-</span> name</span>
+<span id="cb3-179"><a href="data-sources.html#cb3-179" aria-hidden="true" tabindex="-1"></a>  df[<span class="st">&#39;throws&#39;</span>] <span class="ot">&lt;-</span> throws</span>
+<span id="cb3-180"><a href="data-sources.html#cb3-180" aria-hidden="true" tabindex="-1"></a>  df <span class="ot">&lt;-</span> <span class="fu">pivot_wider</span>(df, <span class="at">names_from =</span> columns, <span class="at">values_from =</span> values)</span>
+<span id="cb3-181"><a href="data-sources.html#cb3-181" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-182"><a href="data-sources.html#cb3-182" aria-hidden="true" tabindex="-1"></a>  df_pitching <span class="ot">=</span> <span class="fu">rbind</span>(df_pitching, df)</span>
+<span id="cb3-183"><a href="data-sources.html#cb3-183" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-184"><a href="data-sources.html#cb3-184" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-185"><a href="data-sources.html#cb3-185" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-186"><a href="data-sources.html#cb3-186" aria-hidden="true" tabindex="-1"></a>i <span class="ot">&lt;-</span> <span class="dv">7</span><span class="sc">:</span><span class="dv">36</span></span>
+<span id="cb3-187"><a href="data-sources.html#cb3-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-188"><a href="data-sources.html#cb3-188" aria-hidden="true" tabindex="-1"></a>df_pitching[, i] <span class="ot">&lt;-</span> <span class="fu">sapply</span>(df_pitching[, i], as.numeric)</span>
+<span id="cb3-189"><a href="data-sources.html#cb3-189" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-190"><a href="data-sources.html#cb3-190" aria-hidden="true" tabindex="-1"></a><span class="co"># convert the accented characters to unaccented ones</span></span>
+<span id="cb3-191"><a href="data-sources.html#cb3-191" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-192"><a href="data-sources.html#cb3-192" aria-hidden="true" tabindex="-1"></a>df_pitching<span class="sc">$</span>name <span class="ot">&lt;-</span> <span class="fu">iconv</span>(df_pitching<span class="sc">$</span>name, <span class="at">from=</span><span class="st">&#39;UTF-8&#39;</span>, <span class="at">to=</span><span class="st">&#39;ASCII//TRANSLIT&#39;</span>)</span>
+<span id="cb3-193"><a href="data-sources.html#cb3-193" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-194"><a href="data-sources.html#cb3-194" aria-hidden="true" tabindex="-1"></a><span class="co">#create file</span></span>
+<span id="cb3-195"><a href="data-sources.html#cb3-195" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-196"><a href="data-sources.html#cb3-196" aria-hidden="true" tabindex="-1"></a><span class="co">#write_csv(df_pitching, &#39;data/raw/data_pitching_raw.csv&#39;)</span></span></code></pre></div>
 <p>We save the raw real-life batting and pitching data in the <img src="data/raw/" alt="folder" />.</p>
 
 </div>
