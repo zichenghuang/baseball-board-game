@@ -24,7 +24,7 @@
 <meta name="author" content="Barbara Bettencourt, Gregor Hanuschak, Zicheng Huang" />
 
 
-<meta name="date" content="2021-04-05" />
+<meta name="date" content="2021-04-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -161,126 +161,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="data-transformation" class="section level1" number="3">
 <h1><span class="header-section-number">Chapter 3</span> Data transformation</h1>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="data-transformation.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># for working with data frames</span></span></code></pre></div>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="data-transformation.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">## read in raw data scraped from web</span></span>
-<span id="cb5-2"><a href="data-transformation.html#cb5-2" aria-hidden="true" tabindex="-1"></a>df_batting  <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&#39;data/raw/data_batting_raw.csv&#39;</span>)</span>
-<span id="cb5-3"><a href="data-transformation.html#cb5-3" aria-hidden="true" tabindex="-1"></a>df_pitching <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&#39;data/raw/data_pitching_raw.csv&#39;</span>)</span>
-<span id="cb5-4"><a href="data-transformation.html#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="data-transformation.html#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="do">## batting data clean up</span></span>
-<span id="cb5-6"><a href="data-transformation.html#cb5-6" aria-hidden="true" tabindex="-1"></a>df_batting[<span class="st">&#39;AVG&#39;</span>] <span class="ot">&lt;-</span> df_batting<span class="sc">$</span>H<span class="sc">/</span>df_batting<span class="sc">$</span>AB</span>
-<span id="cb5-7"><a href="data-transformation.html#cb5-7" aria-hidden="true" tabindex="-1"></a>df_batting[<span class="st">&#39;SLG&#39;</span>] <span class="ot">&lt;-</span> (df_batting<span class="sc">$</span>H<span class="sc">-</span>df_batting<span class="sc">$</span><span class="st">`</span><span class="at">2B</span><span class="st">`</span><span class="sc">-</span>df_batting<span class="sc">$</span><span class="st">`</span><span class="at">3B</span><span class="st">`</span><span class="sc">-</span>df_batting<span class="sc">$</span>HR<span class="sc">+</span><span class="dv">2</span><span class="sc">*</span>df_batting<span class="sc">$</span><span class="st">`</span><span class="at">2B</span><span class="st">`</span><span class="sc">+</span><span class="dv">3</span><span class="sc">*</span>df_batting<span class="sc">$</span><span class="st">`</span><span class="at">3B</span><span class="st">`</span><span class="sc">+</span><span class="dv">4</span><span class="sc">*</span>df_batting<span class="sc">$</span>HR)<span class="sc">/</span>df_batting<span class="sc">$</span>AB</span>
-<span id="cb5-8"><a href="data-transformation.html#cb5-8" aria-hidden="true" tabindex="-1"></a>df_batting[<span class="st">&#39;OBA&#39;</span>] <span class="ot">&lt;-</span> (df_batting<span class="sc">$</span>H<span class="sc">+</span>df_batting<span class="sc">$</span>BB<span class="sc">+</span>df_batting<span class="sc">$</span>HBP)<span class="sc">/</span>(df_batting<span class="sc">$</span>AB<span class="sc">+</span>df_batting<span class="sc">$</span>BB<span class="sc">+</span>df_batting<span class="sc">$</span>HBP)</span>
-<span id="cb5-9"><a href="data-transformation.html#cb5-9" aria-hidden="true" tabindex="-1"></a>df_batting[<span class="st">&#39;SAC&#39;</span>] <span class="ot">&lt;-</span> df_batting<span class="sc">$</span>SH<span class="sc">+</span>df_batting<span class="sc">$</span>SF</span>
-<span id="cb5-10"><a href="data-transformation.html#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-11"><a href="data-transformation.html#cb5-11" aria-hidden="true" tabindex="-1"></a>df_batting <span class="ot">&lt;-</span> </span>
-<span id="cb5-12"><a href="data-transformation.html#cb5-12" aria-hidden="true" tabindex="-1"></a>  df_batting <span class="sc">%&gt;%</span> </span>
-<span id="cb5-13"><a href="data-transformation.html#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(playerID, name, hits, </span>
-<span id="cb5-14"><a href="data-transformation.html#cb5-14" aria-hidden="true" tabindex="-1"></a>         AVG, SLG, OBA, G, AB, R, H, RBI, <span class="st">`</span><span class="at">2B</span><span class="st">`</span>, <span class="st">`</span><span class="at">3B</span><span class="st">`</span>, HR, SAC, SB, CS, SO, BB, HBP, TB) <span class="sc">%&gt;%</span> </span>
-<span id="cb5-15"><a href="data-transformation.html#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(playerID)</span>
-<span id="cb5-16"><a href="data-transformation.html#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-17"><a href="data-transformation.html#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co"># create file</span></span>
-<span id="cb5-18"><a href="data-transformation.html#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co"># write_csv(df_batting, &#39;data/real/RealBatting.csv&#39;)</span></span>
-<span id="cb5-19"><a href="data-transformation.html#cb5-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-20"><a href="data-transformation.html#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-21"><a href="data-transformation.html#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="do">## pitching data clean up</span></span>
-<span id="cb5-22"><a href="data-transformation.html#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-23"><a href="data-transformation.html#cb5-23" aria-hidden="true" tabindex="-1"></a>df_pitching[<span class="st">&#39;ERA&#39;</span>] <span class="ot">&lt;-</span> df_pitching<span class="sc">$</span>earned_run_avg</span>
-<span id="cb5-24"><a href="data-transformation.html#cb5-24" aria-hidden="true" tabindex="-1"></a>df_pitching[<span class="st">&#39;AVG_against&#39;</span>] <span class="ot">&lt;-</span> df_pitching<span class="sc">$</span>H<span class="sc">/</span>(df_pitching<span class="sc">$</span>H<span class="sc">+</span><span class="dv">3</span><span class="sc">*</span>df_pitching<span class="sc">$</span>IP)</span>
-<span id="cb5-25"><a href="data-transformation.html#cb5-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-26"><a href="data-transformation.html#cb5-26" aria-hidden="true" tabindex="-1"></a>df_pitching <span class="ot">&lt;-</span> </span>
-<span id="cb5-27"><a href="data-transformation.html#cb5-27" aria-hidden="true" tabindex="-1"></a>  df_pitching <span class="sc">%&gt;%</span> </span>
-<span id="cb5-28"><a href="data-transformation.html#cb5-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(playerID, name, throws, </span>
-<span id="cb5-29"><a href="data-transformation.html#cb5-29" aria-hidden="true" tabindex="-1"></a>         ERA, W, L, SV, AVG_against, G, GS, CG, IP, ER, H, SO, BB, HBP, WP, BK) <span class="sc">%&gt;%</span> </span>
-<span id="cb5-30"><a href="data-transformation.html#cb5-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(playerID)</span>
-<span id="cb5-31"><a href="data-transformation.html#cb5-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-32"><a href="data-transformation.html#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="co"># create file</span></span>
-<span id="cb5-33"><a href="data-transformation.html#cb5-33" aria-hidden="true" tabindex="-1"></a><span class="co"># write_csv(df_pitching, &#39;data/real/RealPitching.csv&#39;)</span></span></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="data-transformation.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#defining dataframes</span></span>
-<span id="cb6-2"><a href="data-transformation.html#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="data-transformation.html#cb6-3" aria-hidden="true" tabindex="-1"></a>rhdf <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&#39;data/real/RealBatting.csv&#39;</span>)</span>
-<span id="cb6-4"><a href="data-transformation.html#cb6-4" aria-hidden="true" tabindex="-1"></a>rpdf <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&#39;data/real/RealPitching.csv&#39;</span>)</span>
-<span id="cb6-5"><a href="data-transformation.html#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-6"><a href="data-transformation.html#cb6-6" aria-hidden="true" tabindex="-1"></a>ghdf <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&#39;data/game/GameBatting.csv&#39;</span>)</span>
-<span id="cb6-7"><a href="data-transformation.html#cb6-7" aria-hidden="true" tabindex="-1"></a>gpdf <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&#39;data/game/GamePitching.csv&#39;</span>)</span>
-<span id="cb6-8"><a href="data-transformation.html#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-9"><a href="data-transformation.html#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#preparing to create new dataframe with both real and game data </span></span>
-<span id="cb6-10"><a href="data-transformation.html#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">#batting/hitting data</span></span>
-<span id="cb6-11"><a href="data-transformation.html#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-12"><a href="data-transformation.html#cb6-12" aria-hidden="true" tabindex="-1"></a>ghdf[<span class="fu">is.na</span>(ghdf)] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb6-13"><a href="data-transformation.html#cb6-13" aria-hidden="true" tabindex="-1"></a>rhdf[<span class="fu">is.na</span>(rhdf)] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb6-14"><a href="data-transformation.html#cb6-14" aria-hidden="true" tabindex="-1"></a>rhdf<span class="sc">$</span>GameAB <span class="ot">=</span> ghdf<span class="sc">$</span>AB</span>
-<span id="cb6-15"><a href="data-transformation.html#cb6-15" aria-hidden="true" tabindex="-1"></a>rhdf<span class="sc">$</span>GameH <span class="ot">=</span> ghdf<span class="sc">$</span>H</span>
-<span id="cb6-16"><a href="data-transformation.html#cb6-16" aria-hidden="true" tabindex="-1"></a>rhdf<span class="sc">$</span>GameTB <span class="ot">=</span> ghdf<span class="sc">$</span>TB</span>
-<span id="cb6-17"><a href="data-transformation.html#cb6-17" aria-hidden="true" tabindex="-1"></a>rhdf<span class="sc">$</span>GameG <span class="ot">=</span> ghdf<span class="sc">$</span>G</span>
-<span id="cb6-18"><a href="data-transformation.html#cb6-18" aria-hidden="true" tabindex="-1"></a>rhdf<span class="sc">$</span>GameR <span class="ot">=</span> ghdf<span class="sc">$</span>R</span>
-<span id="cb6-19"><a href="data-transformation.html#cb6-19" aria-hidden="true" tabindex="-1"></a>rhdf<span class="sc">$</span>GameRBI <span class="ot">=</span> ghdf<span class="sc">$</span>RBI</span>
-<span id="cb6-20"><a href="data-transformation.html#cb6-20" aria-hidden="true" tabindex="-1"></a>rhdf<span class="sc">$</span>Game2B <span class="ot">=</span> ghdf<span class="sc">$</span><span class="st">&quot;2B&quot;</span></span>
-<span id="cb6-21"><a href="data-transformation.html#cb6-21" aria-hidden="true" tabindex="-1"></a>rhdf<span class="sc">$</span>Game3B <span class="ot">=</span> ghdf<span class="sc">$</span><span class="st">&quot;3B&quot;</span></span>
-<span id="cb6-22"><a href="data-transformation.html#cb6-22" aria-hidden="true" tabindex="-1"></a>rhdf<span class="sc">$</span>GameHR <span class="ot">=</span> ghdf<span class="sc">$</span>HR</span>
-<span id="cb6-23"><a href="data-transformation.html#cb6-23" aria-hidden="true" tabindex="-1"></a>rhdf<span class="sc">$</span>GameSB <span class="ot">=</span> ghdf<span class="sc">$</span>SB</span>
-<span id="cb6-24"><a href="data-transformation.html#cb6-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-25"><a href="data-transformation.html#cb6-25" aria-hidden="true" tabindex="-1"></a><span class="co">#only want to work with this condition</span></span>
-<span id="cb6-26"><a href="data-transformation.html#cb6-26" aria-hidden="true" tabindex="-1"></a>rhdf2 <span class="ot">&lt;-</span> rhdf <span class="sc">%&gt;%</span> <span class="fu">filter</span>(GameAB <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">&amp;</span> AB <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
-<span id="cb6-27"><a href="data-transformation.html#cb6-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-28"><a href="data-transformation.html#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="co">#new columns added</span></span>
-<span id="cb6-29"><a href="data-transformation.html#cb6-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-30"><a href="data-transformation.html#cb6-30" aria-hidden="true" tabindex="-1"></a>rhdf2<span class="sc">$</span>H_should_have <span class="ot">=</span> rhdf2<span class="sc">$</span>AVG <span class="sc">*</span> rhdf2<span class="sc">$</span>GameAB</span>
-<span id="cb6-31"><a href="data-transformation.html#cb6-31" aria-hidden="true" tabindex="-1"></a>rhdf2<span class="sc">$</span>TB_should_have <span class="ot">=</span> rhdf2<span class="sc">$</span>SLG <span class="sc">*</span> rhdf2<span class="sc">$</span>GameAB</span>
-<span id="cb6-32"><a href="data-transformation.html#cb6-32" aria-hidden="true" tabindex="-1"></a>rhdf2<span class="sc">$</span>R_should_have <span class="ot">=</span> rhdf2<span class="sc">$</span>R <span class="sc">/</span> rhdf2<span class="sc">$</span>G <span class="sc">*</span> rhdf2<span class="sc">$</span>GameG</span>
-<span id="cb6-33"><a href="data-transformation.html#cb6-33" aria-hidden="true" tabindex="-1"></a>rhdf2<span class="sc">$</span>RBI_should_have <span class="ot">=</span> rhdf2<span class="sc">$</span>RBI <span class="sc">/</span> rhdf2<span class="sc">$</span>G <span class="sc">*</span> rhdf2<span class="sc">$</span>GameG</span>
-<span id="cb6-34"><a href="data-transformation.html#cb6-34" aria-hidden="true" tabindex="-1"></a>rhdf2<span class="sc">$</span><span class="st">&quot;2B_should_have&quot;</span> <span class="ot">=</span> rhdf2<span class="sc">$</span><span class="st">&quot;2B&quot;</span> <span class="sc">/</span> rhdf2<span class="sc">$</span>AB <span class="sc">*</span> rhdf2<span class="sc">$</span>GameAB</span>
-<span id="cb6-35"><a href="data-transformation.html#cb6-35" aria-hidden="true" tabindex="-1"></a>rhdf2<span class="sc">$</span><span class="st">&quot;3B_should_have&quot;</span> <span class="ot">=</span> rhdf2<span class="sc">$</span><span class="st">&quot;3B&quot;</span> <span class="sc">/</span> rhdf2<span class="sc">$</span>AB <span class="sc">*</span> rhdf2<span class="sc">$</span>GameAB</span>
-<span id="cb6-36"><a href="data-transformation.html#cb6-36" aria-hidden="true" tabindex="-1"></a>rhdf2<span class="sc">$</span>HR_should_have <span class="ot">=</span> rhdf2<span class="sc">$</span>HR <span class="sc">/</span> rhdf2<span class="sc">$</span>AB <span class="sc">*</span> rhdf2<span class="sc">$</span>GameAB</span>
-<span id="cb6-37"><a href="data-transformation.html#cb6-37" aria-hidden="true" tabindex="-1"></a>rhdf2<span class="sc">$</span>SB_should_have <span class="ot">=</span> rhdf2<span class="sc">$</span>SB <span class="sc">/</span> rhdf2<span class="sc">$</span>G <span class="sc">*</span> rhdf2<span class="sc">$</span>GameG</span>
-<span id="cb6-38"><a href="data-transformation.html#cb6-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-39"><a href="data-transformation.html#cb6-39" aria-hidden="true" tabindex="-1"></a>rhdf2<span class="sc">$</span>H_deviation <span class="ot">=</span> rhdf2<span class="sc">$</span>GameH <span class="sc">-</span> rhdf2<span class="sc">$</span>H_should_have</span>
-<span id="cb6-40"><a href="data-transformation.html#cb6-40" aria-hidden="true" tabindex="-1"></a>rhdf2<span class="sc">$</span>TB_deviation <span class="ot">=</span> rhdf2<span class="sc">$</span>GameTB <span class="sc">-</span> rhdf2<span class="sc">$</span>TB_should_have</span>
-<span id="cb6-41"><a href="data-transformation.html#cb6-41" aria-hidden="true" tabindex="-1"></a>rhdf2<span class="sc">$</span>R_deviation <span class="ot">=</span> rhdf2<span class="sc">$</span>GameR <span class="sc">-</span> rhdf2<span class="sc">$</span>R_should_have</span>
-<span id="cb6-42"><a href="data-transformation.html#cb6-42" aria-hidden="true" tabindex="-1"></a>rhdf2<span class="sc">$</span>RBI_deviation <span class="ot">=</span> rhdf2<span class="sc">$</span>GameRBI <span class="sc">-</span> rhdf2<span class="sc">$</span>RBI_should_have</span>
-<span id="cb6-43"><a href="data-transformation.html#cb6-43" aria-hidden="true" tabindex="-1"></a>rhdf2<span class="sc">$</span><span class="st">&quot;2B_deviation&quot;</span> <span class="ot">=</span> rhdf2<span class="sc">$</span>Game2B <span class="sc">-</span> rhdf2<span class="sc">$</span><span class="st">&quot;2B_should_have&quot;</span></span>
-<span id="cb6-44"><a href="data-transformation.html#cb6-44" aria-hidden="true" tabindex="-1"></a>rhdf2<span class="sc">$</span><span class="st">&quot;3B_deviation&quot;</span> <span class="ot">=</span> rhdf2<span class="sc">$</span>Game3B <span class="sc">-</span> rhdf2<span class="sc">$</span><span class="st">&quot;3B_should_have&quot;</span></span>
-<span id="cb6-45"><a href="data-transformation.html#cb6-45" aria-hidden="true" tabindex="-1"></a>rhdf2<span class="sc">$</span>HR_deviation <span class="ot">=</span> rhdf2<span class="sc">$</span>GameHR <span class="sc">-</span> rhdf2<span class="sc">$</span>HR_should_have</span>
-<span id="cb6-46"><a href="data-transformation.html#cb6-46" aria-hidden="true" tabindex="-1"></a>rhdf2<span class="sc">$</span>SB_deviation <span class="ot">=</span> rhdf2<span class="sc">$</span>GameSB <span class="sc">-</span> rhdf2<span class="sc">$</span>SB_should_have</span>
-<span id="cb6-47"><a href="data-transformation.html#cb6-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-48"><a href="data-transformation.html#cb6-48" aria-hidden="true" tabindex="-1"></a><span class="co">#added new combined dataframe to files</span></span>
-<span id="cb6-49"><a href="data-transformation.html#cb6-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-50"><a href="data-transformation.html#cb6-50" aria-hidden="true" tabindex="-1"></a><span class="co">#write_csv(rhdf2, &#39;data/combined/Batting.csv&#39;)</span></span>
-<span id="cb6-51"><a href="data-transformation.html#cb6-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-52"><a href="data-transformation.html#cb6-52" aria-hidden="true" tabindex="-1"></a><span class="co">#pitching data</span></span>
-<span id="cb6-53"><a href="data-transformation.html#cb6-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-54"><a href="data-transformation.html#cb6-54" aria-hidden="true" tabindex="-1"></a>gpdf[<span class="fu">is.na</span>(gpdf)] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb6-55"><a href="data-transformation.html#cb6-55" aria-hidden="true" tabindex="-1"></a>rpdf[<span class="fu">is.na</span>(rpdf)] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb6-56"><a href="data-transformation.html#cb6-56" aria-hidden="true" tabindex="-1"></a>rpdf<span class="sc">$</span>GameG <span class="ot">=</span> gpdf<span class="sc">$</span>G</span>
-<span id="cb6-57"><a href="data-transformation.html#cb6-57" aria-hidden="true" tabindex="-1"></a>rpdf<span class="sc">$</span>GameIP <span class="ot">=</span> gpdf<span class="sc">$</span>IP</span>
-<span id="cb6-58"><a href="data-transformation.html#cb6-58" aria-hidden="true" tabindex="-1"></a>rpdf<span class="sc">$</span>GameER <span class="ot">=</span> gpdf<span class="sc">$</span>ER</span>
-<span id="cb6-59"><a href="data-transformation.html#cb6-59" aria-hidden="true" tabindex="-1"></a>rpdf<span class="sc">$</span>GameHits <span class="ot">=</span> gpdf<span class="sc">$</span>Hits</span>
-<span id="cb6-60"><a href="data-transformation.html#cb6-60" aria-hidden="true" tabindex="-1"></a>rpdf<span class="sc">$</span>GameSO <span class="ot">=</span> gpdf<span class="sc">$</span>SO</span>
-<span id="cb6-61"><a href="data-transformation.html#cb6-61" aria-hidden="true" tabindex="-1"></a>rpdf<span class="sc">$</span>GameW <span class="ot">=</span> gpdf<span class="sc">$</span>Wins</span>
-<span id="cb6-62"><a href="data-transformation.html#cb6-62" aria-hidden="true" tabindex="-1"></a>rpdf<span class="sc">$</span>GameL <span class="ot">=</span> gpdf<span class="sc">$</span>Losses</span>
-<span id="cb6-63"><a href="data-transformation.html#cb6-63" aria-hidden="true" tabindex="-1"></a>rpdf<span class="sc">$</span>GameSV <span class="ot">=</span> gpdf<span class="sc">$</span>Saves</span>
-<span id="cb6-64"><a href="data-transformation.html#cb6-64" aria-hidden="true" tabindex="-1"></a>rpdf<span class="sc">$</span>GameBB <span class="ot">=</span> gpdf<span class="sc">$</span>BB</span>
-<span id="cb6-65"><a href="data-transformation.html#cb6-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-66"><a href="data-transformation.html#cb6-66" aria-hidden="true" tabindex="-1"></a><span class="co">#new columns added</span></span>
-<span id="cb6-67"><a href="data-transformation.html#cb6-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-68"><a href="data-transformation.html#cb6-68" aria-hidden="true" tabindex="-1"></a>rpdf<span class="sc">$</span>ER_should_have <span class="ot">=</span> rpdf<span class="sc">$</span>ERA <span class="sc">*</span> rpdf<span class="sc">$</span>GameIP <span class="sc">/</span> <span class="dv">9</span></span>
-<span id="cb6-69"><a href="data-transformation.html#cb6-69" aria-hidden="true" tabindex="-1"></a>rpdf<span class="sc">$</span>Hits_should_have <span class="ot">=</span> rpdf<span class="sc">$</span>H <span class="sc">/</span> rpdf<span class="sc">$</span>IP <span class="sc">*</span> rpdf<span class="sc">$</span>GameIP</span>
-<span id="cb6-70"><a href="data-transformation.html#cb6-70" aria-hidden="true" tabindex="-1"></a>rpdf<span class="sc">$</span>SO_should_have <span class="ot">=</span> rpdf<span class="sc">$</span>SO <span class="sc">/</span> rpdf<span class="sc">$</span>IP <span class="sc">*</span> rpdf<span class="sc">$</span>GameIP</span>
-<span id="cb6-71"><a href="data-transformation.html#cb6-71" aria-hidden="true" tabindex="-1"></a>rpdf<span class="sc">$</span>W_should_have <span class="ot">=</span> rpdf<span class="sc">$</span>W <span class="sc">/</span> rpdf<span class="sc">$</span>G <span class="sc">*</span> rpdf<span class="sc">$</span>GameG</span>
-<span id="cb6-72"><a href="data-transformation.html#cb6-72" aria-hidden="true" tabindex="-1"></a>rpdf<span class="sc">$</span>L_should_have <span class="ot">=</span> rpdf<span class="sc">$</span>L <span class="sc">/</span> rpdf<span class="sc">$</span>G <span class="sc">*</span> rpdf<span class="sc">$</span>GameG</span>
-<span id="cb6-73"><a href="data-transformation.html#cb6-73" aria-hidden="true" tabindex="-1"></a>rpdf<span class="sc">$</span>SV_should_have <span class="ot">=</span> rpdf<span class="sc">$</span>SV <span class="sc">/</span> rpdf<span class="sc">$</span>G <span class="sc">*</span> rpdf<span class="sc">$</span>GameG</span>
-<span id="cb6-74"><a href="data-transformation.html#cb6-74" aria-hidden="true" tabindex="-1"></a>rpdf<span class="sc">$</span>BB_should_have <span class="ot">=</span> rpdf<span class="sc">$</span>BB <span class="sc">/</span> rpdf<span class="sc">$</span>IP <span class="sc">*</span> rpdf<span class="sc">$</span>GameIP</span>
-<span id="cb6-75"><a href="data-transformation.html#cb6-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-76"><a href="data-transformation.html#cb6-76" aria-hidden="true" tabindex="-1"></a>rpdf<span class="sc">$</span>ER_deviation <span class="ot">=</span> rpdf<span class="sc">$</span>GameER <span class="sc">-</span> rpdf<span class="sc">$</span>ER_should_have</span>
-<span id="cb6-77"><a href="data-transformation.html#cb6-77" aria-hidden="true" tabindex="-1"></a>rpdf<span class="sc">$</span>Hits_deviation <span class="ot">=</span> rpdf<span class="sc">$</span>GameHits <span class="sc">-</span> rpdf<span class="sc">$</span>Hits_should_have</span>
-<span id="cb6-78"><a href="data-transformation.html#cb6-78" aria-hidden="true" tabindex="-1"></a>rpdf<span class="sc">$</span>SO_deviation <span class="ot">=</span> rpdf<span class="sc">$</span>GameSO <span class="sc">-</span> rpdf<span class="sc">$</span>SO_should_have</span>
-<span id="cb6-79"><a href="data-transformation.html#cb6-79" aria-hidden="true" tabindex="-1"></a>rpdf<span class="sc">$</span>W_deviation <span class="ot">=</span> rpdf<span class="sc">$</span>GameW <span class="sc">-</span> rpdf<span class="sc">$</span>W_should_have</span>
-<span id="cb6-80"><a href="data-transformation.html#cb6-80" aria-hidden="true" tabindex="-1"></a>rpdf<span class="sc">$</span>L_deviation <span class="ot">=</span> rpdf<span class="sc">$</span>GameL <span class="sc">-</span> rpdf<span class="sc">$</span>L_should_have</span>
-<span id="cb6-81"><a href="data-transformation.html#cb6-81" aria-hidden="true" tabindex="-1"></a>rpdf<span class="sc">$</span>SV_deviation <span class="ot">=</span> rpdf<span class="sc">$</span>GameSV <span class="sc">-</span> rpdf<span class="sc">$</span>SV_should_have</span>
-<span id="cb6-82"><a href="data-transformation.html#cb6-82" aria-hidden="true" tabindex="-1"></a>rpdf<span class="sc">$</span>BB_deviation <span class="ot">=</span> rpdf<span class="sc">$</span>GameBB <span class="sc">-</span> rpdf<span class="sc">$</span>BB_should_have</span>
-<span id="cb6-83"><a href="data-transformation.html#cb6-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-84"><a href="data-transformation.html#cb6-84" aria-hidden="true" tabindex="-1"></a><span class="co">#added new combined dataframe to files</span></span>
-<span id="cb6-85"><a href="data-transformation.html#cb6-85" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-86"><a href="data-transformation.html#cb6-86" aria-hidden="true" tabindex="-1"></a><span class="co">#write_csv(rpdf, &#39;data/combined/Pitching.csv&#39;)</span></span></code></pre></div>
 
 </div>
             </section>
