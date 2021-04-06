@@ -4,9 +4,9 @@ Our data sources are www.baseball-reference.com for the real-life statistics and
 
 In order to extract the data needed from [Baseball Reference](https://www.baseball-reference.com), we performed web scraping to pull the batting and pitching data in the year 1998 for the players that appear in the 100 games of APBA Baseball.
 
-These packages are required.
+We load in the appropriate packages and proceed to retrieve the data.
 
-```{r,message=FALSE}
+```{r}
 library(tidyverse) # for working with data frames
 library(robotstxt) # for checking if we are allowed to scrape the website
 library(rvest)     # for web scraping
@@ -21,7 +21,7 @@ paths_allowed('https://www.baseball-reference.com')
 
 We can scrape the data from the row of Year 1998 of the Standard Batting table on the website for each individual player. For example, the batting for Derek Jeter can be found at https://www.baseball-reference.com/players/j/jeterde01.shtml. The entire list of players can be found in the ![folder](data/players_list/). 
 
-```{r echo = T, results = 'hide',message=FALSE}
+```{r}
 
 ## obtain batting data for players who only do batting
 

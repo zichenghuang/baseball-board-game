@@ -1,11 +1,11 @@
 # Data transformation
 
-```{r echo=TRUE, message=FALSE}
+```{r}
 library(tidyverse) # for working with data frames
 ```
 
 
-```{r echo = T, results = 'hide',message=FALSE}
+```{r}
 
 ## read in raw data scraped from web
 df_batting  <- read_csv('data/raw/data_batting_raw.csv')
@@ -43,7 +43,7 @@ df_pitching <-
 
 ```
 
-```{r echo = T, results = 'hide',message=FALSE}
+```{r}
 
 #defining dataframes
 

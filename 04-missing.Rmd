@@ -8,7 +8,7 @@ library(naniar)
 ```
 Missing values can complicate data exploration, therefore our aim is to find and remove them.
 
-```{r echo=TRUE}
+```{r}
 
 #working with both combined data sets
 #read both data files
@@ -16,10 +16,14 @@ Missing values can complicate data exploration, therefore our aim is to find and
 combh <- read_csv("data/combined/Batting.csv")
 combp <- read_csv("data/combined/Pitching.csv")
 
-#number of NA's in data
+```
 
-colSums(is.na(combh))
-colSums(is.na(combp))
+```{r echo=TRUE}
+
+#calculation of number of NA's in data
+
+colSums(is.na(combh)) #hitting\batting data
+colSums(is.na(combp)) #pitching data
 
 ```
 We can see that there are no NA values in either of the data sets, hence there is no missing data.
