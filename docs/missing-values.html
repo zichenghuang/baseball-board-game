@@ -165,10 +165,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="missing-values" class="section level1" number="4">
 <h1><span class="header-section-number">Chapter 4</span> Missing values</h1>
-<p>Missing values can complicate data exploration, therefore our aim is to find and remove them.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="missing-values.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#calculation of number of NA&#39;s in data</span></span>
-<span id="cb5-2"><a href="missing-values.html#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="missing-values.html#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(combh)) <span class="co">#hitting\batting data</span></span></code></pre></div>
+<p>Missing values can complicate data exploration, therefore our aim is to find and remove them. We use a R command that shows how many NA values are in each column of both the batting and pitching data.</p>
 <pre><code>##        playerID            name            hits             AVG             SLG 
 ##               0               0               0               0               0 
 ##             OBA               G              AB               R               H 
@@ -189,7 +186,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##               0               0               0               0               0 
 ##    HR_deviation    SB_deviation 
 ##               0               0</code></pre>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="missing-values.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(combp)) <span class="co">#pitching data</span></span></code></pre></div>
 <pre><code>##         playerID             name           throws              ERA 
 ##                0                0                0                0 
 ##                W                L               SV      AVG_against 
