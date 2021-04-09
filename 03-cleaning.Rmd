@@ -4,6 +4,17 @@
 library(tidyverse) # for working with data frames
 ```
 
+## Web Scrapped Batting Table
+
+We need to add the following calculated fields into the web scrapped batting data to better measure the performance of the hitters:
+
+- $\text{AVG}=\dfrac{\text{hits(H)}}{\text{at bats(AB)}}$
+
+- $\text{SLG}=\dfrac{\text{first base(1B)}+\text{second base(2B)}\times2+\text{third base(3B)}\times3+\text{home runs(HR)}\times4}{\text{at bats(AB)}}$
+
+- $\text{OBA}=\dfrac{\text{hits(H)}+\text{bases on balls(BB)}+\text{times hit by a pitch(HBP)}}{\text{at bats(AB)}+\text{bases on balls(BB)}+\text{times hit by a pitch(HBP)}}$
+
+- $\text{SAC}=\text{sacrifice hits(SH)}+\text{sacrifice flies(SF)}$
 
 ```{r}
 
@@ -25,8 +36,22 @@ df_batting <-
 
 # create file
 # write_csv(df_batting, 'data/real/RealBatting.csv')
+```
+
+The resulting real life batting table looks like:
+
+```{r, echo=FALSE}
+str(df_batting)
+```
+
+## Web Scrapped Pitching Table
+
+Then we need to add the following calculated fields into the web scrapped pitching data to better measure the performance of the pitchers:
+
+- $\text{AVG_against}=\dfrac{\text{hits(H)}}{\text{hits(H)}+\text{innings pitched(IP)}\times3}$
 
 
+```{r}
 ## pitching data clean up
 
 df_pitching['ERA'] <- df_pitching$earned_run_avg
@@ -42,6 +67,13 @@ df_pitching <-
 # write_csv(df_pitching, 'data/real/RealPitching.csv')
 
 ```
+
+The resulting real life pitching table looks like:
+
+```{r, echo=FALSE}
+str(df_pitching)
+```
+
 
 ```{r}
 

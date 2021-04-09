@@ -1,6 +1,8 @@
 introduction
 data-sources
 data-transformation
+web-scrapped-batting-table
+web-scrapped-pitching-table
 missing-values
 results
 interactive-component
