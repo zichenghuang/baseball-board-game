@@ -137,6 +137,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2" data-path="data-sources.html"><a href="data-sources.html"><i class="fa fa-check"></i><b>2</b> Data sources</a>
 <ul>
 <li class="chapter" data-level="2.1" data-path="data-sources.html"><a href="data-sources.html#batting-table"><i class="fa fa-check"></i><b>2.1</b> Batting Table</a></li>
+<li class="chapter" data-level="2.2" data-path="data-sources.html"><a href="data-sources.html#pitching-table"><i class="fa fa-check"></i><b>2.2</b> Pitching Table</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="data-transformation.html"><a href="data-transformation.html"><i class="fa fa-check"></i><b>3</b> Data transformation</a>
 <ul>
@@ -170,15 +171,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">Chapter 2</span> Data sources</h1>
 <p>Our data sources are www.baseball-reference.com for the real-life statistics and approximately 100 games of scoresheets from APBA Baseball.</p>
 <p>In order to extract the data needed from <a href="https://www.baseball-reference.com">Baseball Reference</a>, we performed web scraping to pull the batting and pitching data in the year 1998 for the players that appear in the 100 games of APBA Baseball.</p>
-<p>First, we check if it is allowed to scrape the <a href="https://www.baseball-reference.com">Baseball Reference</a> website.</p>
+<p>First, we check if it is allowed to scrape the <a href="https://www.baseball-reference.com">Baseball Reference</a> website using the <code>robotstxt</code> package.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="data-sources.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paths_allowed</span>(<span class="st">&#39;https://www.baseball-reference.com&#39;</span>)</span></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
 <div id="batting-table" class="section level2" number="2.1">
 <h2><span class="header-section-number">2.1</span> Batting Table</h2>
-<p>In order to obtain the real-life batting statistics for each individual player, we choose to scrape the Standard Batting table on the Baseball Reference website for each individual player. For example, the batting stats for Derek Jeter can be found at <a href="https://www.baseball-reference.com/players/j/jeterde01.shtml">this link</a>. Since we only want data from 1998 season, the row of Year 1998 in the Standard Batting table is our target.</p>
+<p>In order to obtain the real-life batting statistics for each individual player, we choose to scrape the <strong>Standard Batting</strong> table on the Baseball Reference website for each individual player. The entire list of players can be found in <a href="https://github.com/zichenghuang/baseball-board-game/tree/main/data/players_list">this folder</a>. For example, the batting stats for Derek Jeter can be found at <a href="https://www.baseball-reference.com/players/j/jeterde01.shtml">this link</a>. Since we only want data for 1998 season, the row of Year 1998 in the <strong>Standard Batting</strong> table is our target.</p>
 <p><img src="data/screenshot/jeterde01_batting.png" /></p>
-<p>The entire list of players can be found in the <a href="https://github.com/zichenghuang/baseball-board-game/tree/main/data/players_list">folder</a>.</p>
-<p>We save the raw real-life batting and pitching data in the <a href="https://github.com/zichenghuang/baseball-board-game/tree/main/data/raw">folder</a>.</p>
+<p>Using the <code>rvest</code> package, we can locate this particular row of data with <code>html_nodes()</code> by passing the condition <code>xpath = '//*[@id="batting_standard.1998"]/td'</code>. The column names are stored in the <code>html_attr('data-stat')</code>, and the row values can be extracted using <code>html_text()</code>.</p>
+</div>
+<div id="pitching-table" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> Pitching Table</h2>
+<p>Similar to the Standard Batting table, we can extract the 1998 season pitching statistics from the <strong>Standard Pitching</strong> table. Below is an example of the <a href="https://www.baseball-reference.com/players/r/riverma01.shtml">Baseball Reference page for Mariano Rivera</a>.</p>
+<p><img src="data/screenshot/riverma01_pitching.png" /></p>
+<p>This time, we can locate the row of pitching data with <code>html_nodes()</code> by passing the condition <code>xpath = '//*[@id="pitching_standard.1998"]/td'</code>. The column names are stored in the <code>html_attr('data-stat')</code>, and the row values can be extracted using <code>html_text()</code>.</p>
+<p>After changing the numeric columns to the appropriate data type, we save the raw real-life batting and pitching data in <a href="https://github.com/zichenghuang/baseball-board-game/tree/main/data/raw">this folder</a>.</p>
 
 </div>
 </div>
