@@ -14,7 +14,7 @@ library(rvest)     # for web scraping
 library(stringr)   # for string manipulations
 ```
 
-First, we check if it is allowed to scrape the [Baseball Reference](https://www.baseball-reference.com) website.
+First, we check if it is allowed to scrape the [Baseball Reference](https://www.baseball-reference.com) website using the `robotstxt` package.
 
 ```{r echo=TRUE}
 paths_allowed('https://www.baseball-reference.com')
@@ -22,11 +22,12 @@ paths_allowed('https://www.baseball-reference.com')
 
 ## Batting Table
 
-In order to obtain the real-life batting statistics for each individual player, we choose to scrape the Standard Batting table on the Baseball Reference website for each individual player. For example, the batting stats for Derek Jeter can be found at [this link](https://www.baseball-reference.com/players/j/jeterde01.shtml). Since we only want data from 1998 season, the row of Year 1998 in the Standard Batting table is our target.
+In order to obtain the real-life batting statistics for each individual player, we choose to scrape the **Standard Batting** table on the Baseball Reference website for each individual player. The entire list of players can be found in [this folder](https://github.com/zichenghuang/baseball-board-game/tree/main/data/players_list). For example, the batting stats for Derek Jeter can be found at [this link](https://www.baseball-reference.com/players/j/jeterde01.shtml). Since we only want data for 1998 season, the row of Year 1998 in the **Standard Batting** table is our target.
 
 ![](data/screenshot/jeterde01_batting.png)
 
-The entire list of players can be found in the [folder](https://github.com/zichenghuang/baseball-board-game/tree/main/data/players_list). 
+Using the `rvest` package, we can locate this particular row of data with `html_nodes()` by passing the condition `xpath = '//*[@id="batting_standard.1998"]/td'`. The column names are stored in the `html_attr('data-stat')`, and the row values can be extracted using `html_text()`. 
+
 
 ```{r, eval=FALSE}
 
@@ -160,8 +161,17 @@ df_batting$name <- iconv(df_batting$name, from='UTF-8', to='ASCII//TRANSLIT')
 #create file
 
 #write_csv(df_batting, 'data/raw/data_batting_raw.csv')
+```
 
+## Pitching Table
 
+Similar to the Standard Batting table, we can extract the 1998 season pitching statistics from the **Standard Pitching** table. Below is an example of the [Baseball Reference page for Mariano Rivera](https://www.baseball-reference.com/players/r/riverma01.shtml).
+
+![](data/screenshot/riverma01_pitching.png)
+
+This time, we can locate the row of pitching data with `html_nodes()` by passing the condition `xpath = '//*[@id="pitching_standard.1998"]/td'`. The column names are stored in the `html_attr('data-stat')`, and the row values can be extracted using `html_text()`. 
+
+```{r, eval=FALSE}
 ## obtain pitching data
 
 players_pitching <- read_csv('data/players_list/players_pitching.csv')
@@ -229,6 +239,6 @@ df_pitching$name <- iconv(df_pitching$name, from='UTF-8', to='ASCII//TRANSLIT')
 
 ```
 
-We save the raw real-life batting and pitching data in the [folder](https://github.com/zichenghuang/baseball-board-game/tree/main/data/raw).
+After changing the numeric columns to the appropriate data type, we save the raw real-life batting and pitching data in [this folder](https://github.com/zichenghuang/baseball-board-game/tree/main/data/raw).
 
 
