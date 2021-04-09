@@ -38,7 +38,7 @@ df_batting <-
 # write_csv(df_batting, 'data/real/RealBatting.csv')
 ```
 
-The resulting real life batting table looks like:
+The resulting real-life batting table looks like:
 
 ```{r, echo=FALSE}
 str(df_batting)
@@ -68,7 +68,7 @@ df_pitching <-
 
 ```
 
-The resulting real life pitching table looks like:
+The resulting real-life pitching table looks like:
 
 ```{r, echo=FALSE}
 str(df_pitching)

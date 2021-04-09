@@ -1,5 +1,6 @@
 introduction
 data-sources
+batting-table
 data-transformation
 web-scrapped-batting-table
 web-scrapped-pitching-table

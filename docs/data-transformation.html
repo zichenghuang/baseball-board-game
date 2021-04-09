@@ -134,7 +134,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
-<li class="chapter" data-level="2" data-path="data-sources.html"><a href="data-sources.html"><i class="fa fa-check"></i><b>2</b> Data sources</a></li>
+<li class="chapter" data-level="2" data-path="data-sources.html"><a href="data-sources.html"><i class="fa fa-check"></i><b>2</b> Data sources</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="data-sources.html"><a href="data-sources.html#batting-table"><i class="fa fa-check"></i><b>2.1</b> Batting Table</a></li>
+</ul></li>
 <li class="chapter" data-level="3" data-path="data-transformation.html"><a href="data-transformation.html"><i class="fa fa-check"></i><b>3</b> Data transformation</a>
 <ul>
 <li class="chapter" data-level="3.1" data-path="data-transformation.html"><a href="data-transformation.html#web-scrapped-batting-table"><i class="fa fa-check"></i><b>3.1</b> Web Scrapped Batting Table</a></li>
@@ -174,7 +177,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><p><span class="math inline">\(\text{OBA}=\dfrac{\text{hits(H)}+\text{bases on balls(BB)}+\text{times hit by a pitch(HBP)}}{\text{at bats(AB)}+\text{bases on balls(BB)}+\text{times hit by a pitch(HBP)}}\)</span></p></li>
 <li><p><span class="math inline">\(\text{SAC}=\text{sacrifice hits(SH)}+\text{sacrifice flies(SF)}\)</span></p></li>
 </ul>
-<p>The resulting real life batting table looks like:</p>
+<p>The resulting real-life batting table looks like:</p>
 <pre><code>## tibble [211 x 21] (S3: tbl_df/tbl/data.frame)
 ##  $ playerID: chr [1:211] &quot;abbotku01&quot; &quot;abreubo01&quot; &quot;aguilri01&quot; &quot;alfoned01&quot; ...
 ##  $ name    : chr [1:211] &quot;Kurt Abbott&quot; &quot;Bobby Abreu&quot; &quot;Rick Aguilera&quot; &quot;Edgardo Alfonzo&quot; ...
@@ -204,7 +207,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li><span class="math inline">\(\text{AVG_against}=\dfrac{\text{hits(H)}}{\text{hits(H)}+\text{innings pitched(IP)}\times3}\)</span></li>
 </ul>
-<p>The resulting real life pitching table looks like:</p>
+<p>The resulting real-life pitching table looks like:</p>
 <pre><code>## tibble [83 x 19] (S3: tbl_df/tbl/data.frame)
 ##  $ playerID   : chr [1:83] &quot;aguilri01&quot; &quot;arrojro01&quot; &quot;ashbyan01&quot; &quot;assenpa01&quot; ...
 ##  $ name       : chr [1:83] &quot;Rick Aguilera&quot; &quot;Rolando Arrojo&quot; &quot;Andy Ashby&quot; &quot;Paul Assenmacher&quot; ...
