@@ -6,7 +6,7 @@ library(ggplot2)
 library(visdat)
 library(naniar)
 ```
-Missing values can complicate data exploration, therefore our aim is to find and remove them.
+Missing values can complicate data exploration, therefore our aim is to find and remove them. We use an R command that shows how many NA values are in each column of both the batting and pitching data.
 
 ```{r}
 
@@ -18,7 +18,7 @@ combp <- read_csv("data/combined/Pitching.csv")
 
 ```
 
-```{r echo=TRUE}
+```{r echo=FALSE}
 
 #calculation of number of NA's in data
 
