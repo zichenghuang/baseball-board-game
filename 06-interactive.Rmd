@@ -52,7 +52,7 @@ var svg = d3.select("#plot")
         "translate(" + margin.left + "," + margin.top + ")");
 
 
-d3.csv('data/interactive/Boxpitching.csv', rowConverter).then(function(data) {
+d3.csv("https://github.com/zichenghuang/baseball-board-game/tree/main/data/interactive/Boxpitching.csv", rowConverter).then(function(data) {
 
 // stuff that requires the loaded data
 

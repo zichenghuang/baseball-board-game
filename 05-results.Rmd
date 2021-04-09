@@ -2,26 +2,64 @@
 
 ```{r}
 library(ggplot2)
-p <- ggplot(rhdf2, aes(x=H_deviation)) + geom_boxplot(fill='#A4A4A4', color="darkred") + labs(title = 'Difference between player hits in the game vs. real life')
-p
-p <- ggplot(rhdf2, aes(x=TB_deviation)) + geom_boxplot(fill='#A4A4A4', color="darkred") + labs(title = 'Difference between player total bases in the game vs. real life')
-p
-p <- ggplot(rpdf, aes(x=ER_deviation)) + geom_boxplot(fill='#A4A4A4', color="darkred") + labs(title = 'Difference between pitcher runs given up in the game vs. real life')
-p
-p <- ggplot(rpdf, aes(x=Hits_deviation)) + geom_boxplot(fill='#A4A4A4', color="darkred") + labs(title = 'Difference between pitcher hits given up in the game vs. real life')
-p
-p <- ggplot(rpdf, aes(x=SO_deviation)) + geom_boxplot(fill='#A4A4A4', color="darkred") + labs(title = 'Difference between pitcher strikeouts in the game vs. real life')
-p
 
-# Maybe split up by Left and Right Handed to see if more of a difference?
-# Make interactive so easy to see who the outliers are?
+cbat <- read.csv('data/combined/Batting.csv')
+cpit <- read.csv('data/combined/Pitching.csv')
 
-# Chi-Squared test
+ggplot(cbat, aes(x=H_deviation)) + geom_boxplot(fill='darkred', color="red3") + labs(title = 'Difference between batter hits in the game vs. real life',x="Difference of hits")
+
+ggplot(cbat, aes(x=TB_deviation)) + geom_boxplot(fill='pink1', color="mediumpurple3") + labs(title = 'Difference between batter total bases in the game vs. real life',x="Difference of Total Bases")
+
+ggplot(cpit, aes(x=ER_deviation)) + geom_boxplot(fill='cyan1', color="darkcyan") + labs(title = 'Difference between pitcher runs given up in the game vs. real life', x="Difference of runs given up")
+
+ggplot(cpit, aes(x=Hits_deviation)) + geom_boxplot(fill='gold', color="grey18") + labs(title = 'Difference between pitcher hits given up in the game vs. real life', x="Difference of hits given up")
+
+ggplot(cpit, aes(x=SO_deviation)) + geom_boxplot(fill='palegreen', color="springgreen4") + labs(title = 'Difference between pitcher strikeouts in the game vs. real life', x="Difference of strikeouts")
+
 
 library(GGally)
 #first one has an error
-#ggparcoord(data = rhdf2, columns = c(41, 42, 43, 44, 45, 46, 47, 48), scale="uniminmax", splineFactor = 10, alphaLines = 0.3) + xlab("") + ylab("") 
-ggparcoord(data = rpdf, columns = c(35, 36, 37, 38, 39, 40, 41), scale="uniminmax", splineFactor = 10, alphaLines = 0.3) + xlab("") + ylab("")
+#ggparcoord(data = cbat, columns = c(41, 42, 43, 44, 45, 46, 47, 48), scale="uniminmax", splineFactor = 10, alphaLines = 0.3) + xlab("") + ylab("") 
+ggparcoord(data = cpit, columns = c(35, 36, 37, 38, 39, 40, 41), scale="uniminmax", splineFactor = 10, alphaLines = 0.3) + xlab("") + ylab("")
 
 ```
 
+```{r}
+
+cbat <- read.csv('data/combined/Batting.csv')
+cpit <- read.csv('data/combined/Pitching.csv')
+  
+ggplot(cbat, aes(x=hits,y=H, color=hits)) +geom_point()+ ggtitle("Number of real batter hits by dominant hand")+labs(x="Dominant Hand",y="Hits")
+
+```
+For each dominant hand there seems to exist similar gaps between hits but overall we can see that right-handed batters seem to gave the largest number of hits. However they also have a high number of batters having a small number of hits. We should note that in this data the number of right-handed batters is much bigger than the left and both-handed batters. 
+
+
+```{r}
+
+ggplot(cpit, aes(x=throws,y=H, color=throws)) +geom_point()+ ggtitle("Number of real pitcher hits by dominant hand")+labs(x="Dominant Hand", y="Hits")
+
+```
+In the real pitchers data we have the same issue as before, where we have more data on right-handed players then for left-handed players. Here we can see that the highest number of hits by a pitcher was obtained by a right-handed player. 
+
+
+```{r}
+
+#violin plot
+
+hands <- c("Both","Left","Right")
+ggplot(cbat, aes(x=factor(hits,levels = hands),y=G))+geom_violin(fill="lightblue",color="black")+labs(x="Dominant Hand",y="Games",title = "Violin plot of real number of games played by a batter by dominant hand")+geom_boxplot(width=0.1)
+
+```
+Here, it appears that a batter who is left-handed plays more games than any other batter on average. We can see that a batter who can bat with both hands has much better chances in being able to play a game, as all players who can bat with both hands have played a game.
+We should also note that the first quantile for the players who play with both hands is very high up compared to the left and right-handed people. Again this might be due to the difference of sample sizes.
+
+
+```{r}
+
+hands <- c("Left","Right")
+ggplot(cpit, aes(x=factor(throws,levels = hands),y=W))+geom_violin(fill="plum2",color="black")+labs(x="Dominant Hand",y="Wins",title = "Violin plot of real number of wins by a pitcher by dominant hand")+geom_boxplot(width=0.1)
+
+```
+
+We can see that with pitchers, there is a huge difference in the number of wins depending on the player's dominant hand. On average it appears that a pitcher who is right-handed wins more games. Where the third quantile of the left-handed players is very close to the right-handed player's median. 
