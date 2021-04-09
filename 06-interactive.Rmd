@@ -1,3 +1,23 @@
 # Interactive component
 
+```{r}
+#create new data frames for both batting and pitching
+
+bat <- read.csv('data/combined/Batting.csv')
+pit <- read.csv('data/combined/Pitching.csv')
+
+#want to work with names, left or right handed and deviation of hits
+
+bbat <- bat[,c(2,3,40)]
+
+#want to work with names, left or right handed and deviation of ER
+
+bpit <- pit[,c(2,3,36)]
+
+#create two new files
+
+#write.csv(bbat, 'data/interactive/Boxbatting')
+#write.csv(bpit, 'data/interactive/Boxpitching')
+
+```
 

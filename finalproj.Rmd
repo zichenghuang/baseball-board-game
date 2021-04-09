@@ -1,0 +1,594 @@
+--- 
+title: "YOUR TITLE HERE"
+author: "Barbara Bettencourt, Gregor Hanuschak, Zicheng Huang"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+---
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+
+# Introduction
+
+APBA (American Professional Baseball Association) baseball is a baseball board game that has been played by hardcore baseball fans by decades.  It touts itself as being extremely accurate and true-to-life.
+
+APBA makes "cards" for every major league baseball player for every season of major league baseball.  These cards are based on real life statistics.  You play the game by rolling dice and looking at the result on the cards (simplified description of the game).  The game is accurate enough that adjustments are even made based on the particular baseball stadium you choose to play in (so similar numbers of homeruns should occur in each ballpark in the game as they do in real life).
+
+We have access to many scorecards of data from many times the board game was played (scorecards include how many at-bats players had in the game, how many hits they had, how many runs that pitchers gave up, etc.)
+
+Our project idea is to compare statistics of how players do in the game versus how they did in real life.
+
+As a simple example, if a player had 300 at-bats, and had 100 hits in real life then you would expect that the same player would have 50 hits in the game if he had 150 at-bats.
+
+We will see how close to reality the modeling actually is in APBA baseball.
+
+<!--chapter:end:index.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Data sources
+
+Our data sources are www.baseball-reference.com for the real-life statistics and approximately 100 games of scoresheets from APBA Baseball.
+
+In order to extract the data needed from [Baseball Reference](https://www.baseball-reference.com), we performed web scraping to pull the batting and pitching data in the year 1998 for the players that appear in the 100 games of APBA Baseball.
+
+We load in the appropriate packages and proceed to retrieve the data.
+
+```{r}
+library(tidyverse) # for working with data frames
+library(robotstxt) # for checking if we are allowed to scrape the website
+library(rvest)     # for web scraping
+library(stringr)   # for string manipulations
+```
+
+First, we check if it is allowed to scrape the [Baseball Reference](https://www.baseball-reference.com) website.
+
+```{r echo=TRUE}
+paths_allowed('https://www.baseball-reference.com')
+```
+
+We can scrape the data from the row of Year 1998 of the Standard Batting table on the website for each individual player. For example, the batting for Derek Jeter can be found at https://www.baseball-reference.com/players/j/jeterde01.shtml. The entire list of players can be found in the ![folder](data/players_list/). 
+
+```{r}
+
+## obtain batting data for players who only do batting
+
+players_batting <- read_csv('data/players_list/players_batting_only.csv')
+
+n <- nrow(players_batting)
+
+df_batting_only = data.frame()
+
+for (i in 1:n){
+  url <- paste('https://www.baseball-reference.com/players/',
+               substr(players_batting$playerID[i], 1, 1),
+               '/',
+               players_batting$playerID[i],
+               '.shtml',
+               sep = '')
+  
+  # paths_allowed(url)
+  
+## creating variables  
+  
+  web <- read_html(url)
+  
+  name <- 
+    web %>% 
+    html_nodes(xpath = '//*[@id="meta"]/div[2]/h1/span') %>% 
+    html_text()
+  
+  hits <- 
+    web %>% 
+    html_nodes(xpath = '//*[@id="meta"]/div[2]/p[2]') %>% 
+    html_text() %>% str_extract(regex('Bats:.*')) %>% 
+    str_remove_all('Bats: ')
+  
+  columns <- 
+    web %>% 
+    html_nodes(xpath = '//*[@id="batting_standard.1998"]/td') %>% 
+    html_attr('data-stat')
+  
+  values <- 
+    web %>% 
+    html_nodes(xpath = '//*[@id="batting_standard.1998"]/td') %>% 
+    html_text()
+  
+  df <- data.frame(columns, values)
+  df['playerID'] <- players_batting$playerID[i]
+  df['name'] <- name
+  df['hits'] <- hits
+  df <- pivot_wider(df, names_from = columns, values_from = values)
+  
+  df_batting_only = rbind(df_batting_only, df)
+  
+}
+
+## obtain batting data for players who do both batting and pitching
+
+players_batting <- read_csv('data/players_list/players_batting_pitching.csv')
+
+n <- nrow(players_batting)
+
+df_batting_pitching = data.frame()
+
+for (i in 1:n){
+  url <- paste('https://www.baseball-reference.com/players/',
+               substr(players_batting$playerID[i], 1, 1),
+               '/',
+               players_batting$playerID[i],
+               '.shtml',
+               sep = '')
+  
+  # paths_allowed(url)
+  
+  web <- read_html(url)
+  
+## creating variables  
+  
+  name <- 
+    web %>% 
+    html_nodes(xpath = '//*[@id="meta"]/div[2]/h1/span') %>% 
+    html_text()
+  
+  hits <- 
+    web %>% 
+    html_nodes(xpath = '//*[@id="meta"]/div[2]/p[2]') %>% 
+    html_text() %>% str_extract(regex('Bats:.*')) %>% 
+    str_remove_all('Bats: ')
+  
+  columns <- 
+    web %>% 
+    html_nodes(xpath = '//comment()') %>% 
+    html_text() %>%              # extract comment text
+    paste(collapse = '') %>%     # collapse to a single string
+    read_html() %>% 
+    html_nodes(xpath = '//*[@id="batting_standard.1998"]/td') %>% 
+    html_attr('data-stat')
+  
+  values <- 
+    web %>% 
+    html_nodes(xpath = '//comment()') %>% 
+    html_text() %>%              # extract comment text
+    paste(collapse = '') %>%     # collapse to a single string
+    read_html() %>% 
+    html_nodes(xpath = '//*[@id="batting_standard.1998"]/td') %>% 
+    html_text()
+  
+  df <- data.frame(columns, values)
+  df['playerID'] <- players_batting$playerID[i]
+  df['name'] <- name
+  df['hits'] <- hits
+  df <- pivot_wider(df, names_from = columns, values_from = values)
+  
+  df_batting_pitching = rbind(df_batting_pitching, df)
+  
+}
+
+
+## combine bating data
+
+df_batting = rbind(df_batting_only, df_batting_pitching)
+
+i <- 7:30
+
+df_batting[, i] <- sapply(df_batting[, i], as.numeric)
+
+# convert the accented characters to unaccented ones
+
+df_batting$name <- iconv(df_batting$name, from='UTF-8', to='ASCII//TRANSLIT')
+
+#create file
+
+#write_csv(df_batting, 'data/raw/data_batting_raw.csv')
+
+
+## obtain pitching data
+
+players_pitching <- read_csv('data/players_list/players_pitching.csv')
+
+n <- nrow(players_pitching)
+
+df_pitching = data.frame()
+
+for (i in 1:n){
+  url <- paste('https://www.baseball-reference.com/players/',
+               substr(players_pitching$playerID[i], 1, 1),
+               '/',
+               players_pitching$playerID[i],
+               '.shtml',
+               sep = '')
+  
+# paths_allowed(url)
+  
+  web <- read_html(url)
+ 
+## creating variables  
+   
+  name <- 
+    web %>% 
+    html_nodes(xpath = '//*[@id="meta"]/div[2]/h1/span') %>% 
+    html_text()
+  
+  throws <- 
+    web %>% html_nodes(xpath = '//*[@id="meta"]/div[2]/p[2]') %>% 
+    html_text() %>% 
+    str_extract(regex('Throws:.*')) %>% 
+    str_remove_all('Throws: ')
+  
+  columns <- 
+    web %>% 
+    html_nodes(xpath = '//*[@id="pitching_standard.1998"]/td') %>% 
+    html_attr('data-stat')
+  
+  values <- 
+    web %>% 
+    html_nodes(xpath = '//*[@id="pitching_standard.1998"]/td') %>% 
+    html_text()
+  
+  df <- data.frame(columns, values)
+  df['playerID'] <- players_pitching$playerID[i]
+  df['name'] <- name
+  df['throws'] <- throws
+  df <- pivot_wider(df, names_from = columns, values_from = values)
+  
+  df_pitching = rbind(df_pitching, df)
+  
+}
+
+i <- 7:36
+
+df_pitching[, i] <- sapply(df_pitching[, i], as.numeric)
+
+# convert the accented characters to unaccented ones
+
+df_pitching$name <- iconv(df_pitching$name, from='UTF-8', to='ASCII//TRANSLIT')
+
+#create file
+
+#write_csv(df_pitching, 'data/raw/data_pitching_raw.csv')
+
+```
+
+We save the raw real-life batting and pitching data in the ![folder](data/raw/).
+
+
+
+<!--chapter:end:02-data.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Data transformation
+
+```{r}
+library(tidyverse) # for working with data frames
+```
+
+
+```{r}
+
+## read in raw data scraped from web
+df_batting  <- read_csv('data/raw/data_batting_raw.csv')
+df_pitching <- read_csv('data/raw/data_pitching_raw.csv')
+
+## batting data clean up
+df_batting['AVG'] <- df_batting$H/df_batting$AB
+df_batting['SLG'] <- (df_batting$H-df_batting$`2B`-df_batting$`3B`-df_batting$HR+2*df_batting$`2B`+3*df_batting$`3B`+4*df_batting$HR)/df_batting$AB
+df_batting['OBA'] <- (df_batting$H+df_batting$BB+df_batting$HBP)/(df_batting$AB+df_batting$BB+df_batting$HBP)
+df_batting['SAC'] <- df_batting$SH+df_batting$SF
+
+df_batting <- 
+  df_batting %>% 
+  select(playerID, name, hits, 
+         AVG, SLG, OBA, G, AB, R, H, RBI, `2B`, `3B`, HR, SAC, SB, CS, SO, BB, HBP, TB) %>% 
+  arrange(playerID)
+
+# create file
+# write_csv(df_batting, 'data/real/RealBatting.csv')
+
+
+## pitching data clean up
+
+df_pitching['ERA'] <- df_pitching$earned_run_avg
+df_pitching['AVG_against'] <- df_pitching$H/(df_pitching$H+3*df_pitching$IP)
+
+df_pitching <- 
+  df_pitching %>% 
+  select(playerID, name, throws, 
+         ERA, W, L, SV, AVG_against, G, GS, CG, IP, ER, H, SO, BB, HBP, WP, BK) %>% 
+  arrange(playerID)
+
+# create file
+# write_csv(df_pitching, 'data/real/RealPitching.csv')
+
+```
+
+```{r}
+
+#defining dataframes
+
+rhdf <- read_csv('data/real/RealBatting.csv')
+rpdf <- read_csv('data/real/RealPitching.csv')
+
+ghdf <- read_csv('data/game/GameBatting.csv')
+gpdf <- read_csv('data/game/GamePitching.csv')
+
+#preparing to create new dataframe with both real and game data 
+#batting/hitting data
+
+ghdf[is.na(ghdf)] <- 0
+rhdf[is.na(rhdf)] <- 0
+rhdf$GameAB = ghdf$AB
+rhdf$GameH = ghdf$H
+rhdf$GameTB = ghdf$TB
+rhdf$GameG = ghdf$G
+rhdf$GameR = ghdf$R
+rhdf$GameRBI = ghdf$RBI
+rhdf$Game2B = ghdf$"2B"
+rhdf$Game3B = ghdf$"3B"
+rhdf$GameHR = ghdf$HR
+rhdf$GameSB = ghdf$SB
+
+#only want to work with this condition
+rhdf2 <- rhdf %>% filter(GameAB > 0 & AB > 0)
+
+#new columns added
+
+rhdf2$H_should_have = rhdf2$AVG * rhdf2$GameAB
+rhdf2$TB_should_have = rhdf2$SLG * rhdf2$GameAB
+rhdf2$R_should_have = rhdf2$R / rhdf2$G * rhdf2$GameG
+rhdf2$RBI_should_have = rhdf2$RBI / rhdf2$G * rhdf2$GameG
+rhdf2$"2B_should_have" = rhdf2$"2B" / rhdf2$AB * rhdf2$GameAB
+rhdf2$"3B_should_have" = rhdf2$"3B" / rhdf2$AB * rhdf2$GameAB
+rhdf2$HR_should_have = rhdf2$HR / rhdf2$AB * rhdf2$GameAB
+rhdf2$SB_should_have = rhdf2$SB / rhdf2$G * rhdf2$GameG
+
+rhdf2$H_deviation = rhdf2$GameH - rhdf2$H_should_have
+rhdf2$TB_deviation = rhdf2$GameTB - rhdf2$TB_should_have
+rhdf2$R_deviation = rhdf2$GameR - rhdf2$R_should_have
+rhdf2$RBI_deviation = rhdf2$GameRBI - rhdf2$RBI_should_have
+rhdf2$"2B_deviation" = rhdf2$Game2B - rhdf2$"2B_should_have"
+rhdf2$"3B_deviation" = rhdf2$Game3B - rhdf2$"3B_should_have"
+rhdf2$HR_deviation = rhdf2$GameHR - rhdf2$HR_should_have
+rhdf2$SB_deviation = rhdf2$GameSB - rhdf2$SB_should_have
+
+#added new combined dataframe to files
+
+#write_csv(rhdf2, 'data/combined/Batting.csv')
+
+#pitching data
+
+gpdf[is.na(gpdf)] <- 0
+rpdf[is.na(rpdf)] <- 0
+rpdf$GameG = gpdf$G
+rpdf$GameIP = gpdf$IP
+rpdf$GameER = gpdf$ER
+rpdf$GameHits = gpdf$Hits
+rpdf$GameSO = gpdf$SO
+rpdf$GameW = gpdf$Wins
+rpdf$GameL = gpdf$Losses
+rpdf$GameSV = gpdf$Saves
+rpdf$GameBB = gpdf$BB
+
+#new columns added
+
+rpdf$ER_should_have = rpdf$ERA * rpdf$GameIP / 9
+rpdf$Hits_should_have = rpdf$H / rpdf$IP * rpdf$GameIP
+rpdf$SO_should_have = rpdf$SO / rpdf$IP * rpdf$GameIP
+rpdf$W_should_have = rpdf$W / rpdf$G * rpdf$GameG
+rpdf$L_should_have = rpdf$L / rpdf$G * rpdf$GameG
+rpdf$SV_should_have = rpdf$SV / rpdf$G * rpdf$GameG
+rpdf$BB_should_have = rpdf$BB / rpdf$IP * rpdf$GameIP
+
+rpdf$ER_deviation = rpdf$GameER - rpdf$ER_should_have
+rpdf$Hits_deviation = rpdf$GameHits - rpdf$Hits_should_have
+rpdf$SO_deviation = rpdf$GameSO - rpdf$SO_should_have
+rpdf$W_deviation = rpdf$GameW - rpdf$W_should_have
+rpdf$L_deviation = rpdf$GameL - rpdf$L_should_have
+rpdf$SV_deviation = rpdf$GameSV - rpdf$SV_should_have
+rpdf$BB_deviation = rpdf$GameBB - rpdf$BB_should_have
+
+#added new combined dataframe to files
+
+#write_csv(rpdf, 'data/combined/Pitching.csv')
+
+```
+
+
+<!--chapter:end:03-cleaning.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Missing values
+
+```{r}
+#load necessary packages
+library(ggplot2)
+library(visdat)
+library(naniar)
+```
+Missing values can complicate data exploration, therefore our aim is to find and remove them. We use an R command that shows how many NA values are in each column of both the batting and pitching data.
+
+```{r}
+
+#working with both combined data sets
+#read both data files
+
+combh <- read_csv("data/combined/Batting.csv")
+combp <- read_csv("data/combined/Pitching.csv")
+
+```
+
+```{r echo=FALSE}
+
+#calculation of number of NA's in data
+
+colSums(is.na(combh)) #hitting\batting data
+colSums(is.na(combp)) #pitching data
+
+```
+We can see that there are no NA values in either of the data sets, hence there is no missing data.
+Plotting the two data sets asserts this.
+
+```{r}
+vis_miss(combh)
+vis_miss(combp)
+
+gg_miss_var(combh)
+gg_miss_var(combp)
+```
+
+<!--chapter:end:04-missing.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Results
+
+```{r}
+library(ggplot2)
+p <- ggplot(rhdf2, aes(x=H_deviation)) + geom_boxplot(fill='#A4A4A4', color="darkred") + labs(title = 'Difference between player hits in the game vs. real life')
+p
+p <- ggplot(rhdf2, aes(x=TB_deviation)) + geom_boxplot(fill='#A4A4A4', color="darkred") + labs(title = 'Difference between player total bases in the game vs. real life')
+p
+p <- ggplot(rpdf, aes(x=ER_deviation)) + geom_boxplot(fill='#A4A4A4', color="darkred") + labs(title = 'Difference between pitcher runs given up in the game vs. real life')
+p
+p <- ggplot(rpdf, aes(x=Hits_deviation)) + geom_boxplot(fill='#A4A4A4', color="darkred") + labs(title = 'Difference between pitcher hits given up in the game vs. real life')
+p
+p <- ggplot(rpdf, aes(x=SO_deviation)) + geom_boxplot(fill='#A4A4A4', color="darkred") + labs(title = 'Difference between pitcher strikeouts in the game vs. real life')
+p
+
+# Maybe split up by Left and Right Handed to see if more of a difference?
+# Make interactive so easy to see who the outliers are?
+
+# Chi-Squared test
+
+library(GGally)
+#first one has an error
+#ggparcoord(data = rhdf2, columns = c(41, 42, 43, 44, 45, 46, 47, 48), scale="uniminmax", splineFactor = 10, alphaLines = 0.3) + xlab("") + ylab("") 
+ggparcoord(data = rpdf, columns = c(35, 36, 37, 38, 39, 40, 41), scale="uniminmax", splineFactor = 10, alphaLines = 0.3) + xlab("") + ylab("")
+
+```
+
+
+<!--chapter:end:05-results.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Interactive component
+
+```{r}
+#create new data frames for both batting and pitching
+
+bat <- read.csv('data/combined/Batting.csv')
+pit <- read.csv('data/combined/Pitching.csv')
+
+#want to work with names, left or right handed and deviation of hits
+
+bbat <- bat[,c(2,3,40)]
+
+#want to work with names, left or right handed and deviation of ER
+
+bpit <- pit[,c(2,3,36)]
+
+#create two new files
+
+#write.csv(bbat, 'data/interactive/Boxbatting')
+#write.csv(bpit, 'data/interactive/Boxpitching')
+
+```
+
+```{r setup}
+library(r2d3)
+```
+
+```{d3 data=}
+<!-- Load d3.js -->
+<script src="https://d3js.org/d3.v4.js"></script>
+<meta charset="utf-8">
+<!-- Create a div where the graph will take place -->
+<div id="my_dataviz"></div>
+
+<!-- Plugin for color scale -->
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+
+<!-- Tooltip style -->
+<style>
+.tooltip {
+  background-color: black;
+  border: none;
+  border-radius: 5px;
+  padding: 15px;
+  min-width: 400px;
+  text-align: left;
+  color: white;
+}
+</style>
+
+<script>
+
+// set the dimensions and margins of the graph
+var margin = {top: 10, right: 30, bottom: 50, left: 70},
+    width = 460 - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom;
+
+// append the svg object to the body of the page
+var svg = d3.select("#my_dataviz")
+  .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+// Read the data and compute summary statistics for each specie
+d3.csv('data/interactive/Boxpitching.csv', function(data) {
+
+
+
+</script>
+```
+
+
+<!--chapter:end:06-interactive.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Conclusion
+
+
+<!--chapter:end:07-conclusion.Rmd-->
+
