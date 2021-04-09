@@ -19,9 +19,9 @@ First, we check if it is allowed to scrape the [Baseball Reference](https://www.
 paths_allowed('https://www.baseball-reference.com')
 ```
 
-We can scrape the data from the row of Year 1998 of the Standard Batting table on the website for each individual player. For example, the batting for Derek Jeter can be found at https://www.baseball-reference.com/players/j/jeterde01.shtml. The entire list of players can be found in the ![folder](data/players_list/). 
+We can scrape the data from the row of Year 1998 of the Standard Batting table on the website for each individual player. For example, the batting for Derek Jeter can be found at https://www.baseball-reference.com/players/j/jeterde01.shtml. The entire list of players can be found in the [folder](https://github.com/zichenghuang/baseball-board-game/tree/main/data/players_list). 
 
-```{r}
+```{r, eval=FALSE}
 
 ## obtain batting data for players who only do batting
 
@@ -222,6 +222,6 @@ df_pitching$name <- iconv(df_pitching$name, from='UTF-8', to='ASCII//TRANSLIT')
 
 ```
 
-We save the raw real-life batting and pitching data in the ![folder](data/raw/).
+We save the raw real-life batting and pitching data in the [folder](https://github.com/zichenghuang/baseball-board-game/tree/main/data/raw).
 
 

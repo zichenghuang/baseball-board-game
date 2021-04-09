@@ -24,7 +24,7 @@
 <meta name="author" content="Barbara Bettencourt, Gregor Hanuschak, Zicheng Huang" />
 
 
-<meta name="date" content="2021-04-06" />
+<meta name="date" content="2021-04-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -135,7 +135,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
 <li class="chapter" data-level="2" data-path="data-sources.html"><a href="data-sources.html"><i class="fa fa-check"></i><b>2</b> Data sources</a></li>
-<li class="chapter" data-level="3" data-path="data-transformation.html"><a href="data-transformation.html"><i class="fa fa-check"></i><b>3</b> Data transformation</a></li>
+<li class="chapter" data-level="3" data-path="data-transformation.html"><a href="data-transformation.html"><i class="fa fa-check"></i><b>3</b> Data transformation</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="data-transformation.html"><a href="data-transformation.html#web-scrapped-batting-table"><i class="fa fa-check"></i><b>3.1</b> Web Scrapped Batting Table</a></li>
+<li class="chapter" data-level="3.2" data-path="data-transformation.html"><a href="data-transformation.html#web-scrapped-pitching-table"><i class="fa fa-check"></i><b>3.2</b> Web Scrapped Pitching Table</a></li>
+</ul></li>
 <li class="chapter" data-level="4" data-path="missing-values.html"><a href="missing-values.html"><i class="fa fa-check"></i><b>4</b> Missing values</a></li>
 <li class="chapter" data-level="5" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>5</b> Results</a></li>
 <li class="chapter" data-level="6" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>6</b> Interactive component</a></li>
@@ -167,8 +171,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>First, we check if it is allowed to scrape the <a href="https://www.baseball-reference.com">Baseball Reference</a> website.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="data-sources.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paths_allowed</span>(<span class="st">&#39;https://www.baseball-reference.com&#39;</span>)</span></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
-<p>We can scrape the data from the row of Year 1998 of the Standard Batting table on the website for each individual player. For example, the batting for Derek Jeter can be found at <a href="https://www.baseball-reference.com/players/j/jeterde01.shtml" class="uri">https://www.baseball-reference.com/players/j/jeterde01.shtml</a>. The entire list of players can be found in the <img src="data/players_list/" alt="folder" />.</p>
-<p>We save the raw real-life batting and pitching data in the <img src="data/raw/" alt="folder" />.</p>
+<p>We can scrape the data from the row of Year 1998 of the Standard Batting table on the website for each individual player. For example, the batting for Derek Jeter can be found at <a href="https://www.baseball-reference.com/players/j/jeterde01.shtml" class="uri">https://www.baseball-reference.com/players/j/jeterde01.shtml</a>. The entire list of players can be found in the <a href="https://github.com/zichenghuang/baseball-board-game/tree/main/data/players_list">folder</a>.</p>
+<p>We save the raw real-life batting and pitching data in the <a href="https://github.com/zichenghuang/baseball-board-game/tree/main/data/raw">folder</a>.</p>
 
 </div>
             </section>
@@ -227,6 +231,20 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>
