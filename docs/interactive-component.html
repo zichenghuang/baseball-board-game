@@ -130,7 +130,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <nav role="navigation">
 
 <ul class="summary">
-<li><a href="./">SHORT TITLE HERE</a></li>
+<li><a href="./">Baseball Board Game </a></li>
 
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
@@ -147,7 +147,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="4" data-path="missing-values.html"><a href="missing-values.html"><i class="fa fa-check"></i><b>4</b> Missing values</a></li>
 <li class="chapter" data-level="5" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>5</b> Results</a></li>
-<li class="chapter" data-level="6" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>6</b> Interactive component</a></li>
+<li class="chapter" data-level="6" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>6</b> Interactive component</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="interactive-component.html"><a href="interactive-component.html#er-deviation-by-left-and-right-handed-pitchers"><i class="fa fa-check"></i><b>6.1</b> ER Deviation by Left and Right-handed Pitchers</a></li>
+</ul></li>
 <li class="chapter" data-level="7" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>7</b> Conclusion</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -170,7 +173,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="interactive-component" class="section level1" number="6">
 <h1><span class="header-section-number">Chapter 6</span> Interactive component</h1>
-&lt;!DOCTYPE html&gt;
+<div id="er-deviation-by-left-and-right-handed-pitchers" class="section level2" number="6.1">
+<h2><span class="header-section-number">6.1</span> ER Deviation by Left and Right-handed Pitchers</h2>
 <meta charset="utf-8">
 <!-- Load d3.js -->
 <script src="https://d3js.org/d3.v4.js"></script>
@@ -196,8 +200,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 // set the dimensions and margins of the graph
 var margin = {top: 10, right: 30, bottom: 50, left: 70},
-    width = 460 - margin.left - margin.right,
-    height = 400 - margin.top - margin.bottom;
+    width = 660 - margin.left - margin.right,
+    height = 600 - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
 var svg = d3.select("#my_dataviz")
@@ -236,7 +240,7 @@ d3.csv("https://raw.githubusercontent.com/zichenghuang/baseball-board-game/main/
 
   // Show the X scale
   var x = d3.scaleLinear()
-    .domain([-6,14])
+    .domain([-20,20])
     .range([0, width])
   svg.append("g")
     .attr("transform", "translate(0," + height + ")")
@@ -246,14 +250,14 @@ d3.csv("https://raw.githubusercontent.com/zichenghuang/baseball-board-game/main/
   // Color scale
   var myColor = d3.scaleSequential()
     .interpolator(d3.interpolateInferno)
-    .domain([4,8])
+    .domain([-6,14])
 
   // Add X axis label:
   svg.append("text")
-      .attr("text-anchor", "end")
-      .attr("x", width)
+      .attr("text-anchor", "middle")
+      .attr("x", width/2)
       .attr("y", height + margin.top + 30)
-      .text("ER deviation");
+      .text("ER Deviation");
 
   // Show the main vertical line
   svg
@@ -308,7 +312,7 @@ d3.csv("https://raw.githubusercontent.com/zichenghuang/baseball-board-game/main/
       .duration(200)
       .style("opacity", 1)
     tooltip
-        .html("<span style='color:grey'>ER_deviation: </span>" + d.ER_deviation) // + d.Prior_disorder + "<br>" + "HR: " +  d.HR)
+        .html("<span style='color:pink'>ER Deviation: </span>" + d.ER_deviation + "<br>" + d.name) // + d.Prior_disorder + "<br>" + "HR: " +  d.HR)
         .style("left", (d3.mouse(this)[0]+30) + "px")
         .style("top", (d3.mouse(this)[1]+30) + "px")
   }
@@ -344,7 +348,9 @@ d3.csv("https://raw.githubusercontent.com/zichenghuang/baseball-board-game/main/
 })
 
 </script>
+<p>We created this plot with the aid of (<a href="https://www.d3-graph-gallery.com/graph/boxplot_horizontal.html">ref</a>).</p>
 
+</div>
 </div>
             </section>
 

@@ -9,6 +9,7 @@ pit <- read.csv('data/combined/Pitching.csv')
 #want to work with names, left or right handed and deviation of hits
 
 bbat <- bat[,c(2,3,40)]
+bbat$H_deviation <- signif(bbat$H_deviation,2)
 
 #want to work with names, left or right handed and deviation of ER
 
@@ -18,11 +19,12 @@ bpit$ER_deviation <- signif(bpit$ER_deviation,2)
 #create two new files
 
 #write.csv(bbat, 'data/interactive/Boxbatting.csv')
-write.csv(bpit, 'data/interactive/Boxpitching.csv')
+#write.csv(bpit, 'data/interactive/Boxpitching.csv')
 
 ```
 
-<!DOCTYPE html>
+## ER Deviation by Left and Right-handed Pitchers
+
 <meta charset="utf-8">
 
 <!-- Load d3.js -->
@@ -51,8 +53,8 @@ write.csv(bpit, 'data/interactive/Boxpitching.csv')
 
 // set the dimensions and margins of the graph
 var margin = {top: 10, right: 30, bottom: 50, left: 70},
-    width = 460 - margin.left - margin.right,
-    height = 400 - margin.top - margin.bottom;
+    width = 660 - margin.left - margin.right,
+    height = 600 - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
 var svg = d3.select("#my_dataviz")
@@ -91,7 +93,7 @@ d3.csv("https://raw.githubusercontent.com/zichenghuang/baseball-board-game/main/
 
   // Show the X scale
   var x = d3.scaleLinear()
-    .domain([-6,14])
+    .domain([-20,20])
     .range([0, width])
   svg.append("g")
     .attr("transform", "translate(0," + height + ")")
@@ -101,14 +103,14 @@ d3.csv("https://raw.githubusercontent.com/zichenghuang/baseball-board-game/main/
   // Color scale
   var myColor = d3.scaleSequential()
     .interpolator(d3.interpolateInferno)
-    .domain([4,8])
+    .domain([-6,14])
 
   // Add X axis label:
   svg.append("text")
-      .attr("text-anchor", "end")
-      .attr("x", width)
+      .attr("text-anchor", "middle")
+      .attr("x", width/2)
       .attr("y", height + margin.top + 30)
-      .text("ER deviation");
+      .text("ER Deviation");
 
   // Show the main vertical line
   svg
@@ -163,7 +165,7 @@ d3.csv("https://raw.githubusercontent.com/zichenghuang/baseball-board-game/main/
       .duration(200)
       .style("opacity", 1)
     tooltip
-        .html("<span style='color:grey'>ER_deviation: </span>" + d.ER_deviation) // + d.Prior_disorder + "<br>" + "HR: " +  d.HR)
+        .html("<span style='color:pink'>ER Deviation: </span>" + d.ER_deviation + "<br>" + d.name) // + d.Prior_disorder + "<br>" + "HR: " +  d.HR)
         .style("left", (d3.mouse(this)[0]+30) + "px")
         .style("top", (d3.mouse(this)[1]+30) + "px")
   }
@@ -199,3 +201,5 @@ d3.csv("https://raw.githubusercontent.com/zichenghuang/baseball-board-game/main/
 })
 
 </script>
+
+We created this plot with the aid of ([ref](https://www.d3-graph-gallery.com/graph/boxplot_horizontal.html)). 

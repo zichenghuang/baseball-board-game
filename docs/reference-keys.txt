@@ -9,4 +9,5 @@ cleaning-the-combined-data
 missing-values
 results
 interactive-component
+er-deviation-by-left-and-right-handed-pitchers
 conclusion

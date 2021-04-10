@@ -81,7 +81,7 @@ str(df_pitching)
 
 ## Cleaning the Combined Data
 
-Once real data was scraped into CSV files (again, one file for hitting and one for pitching), these were also put into their own data frames.  We then consolidated the information from the game hitting and real hitting data frames into the same data frame such that every row in the consolidated hitting data frame had all the relevant information for the same player.  For example, hitting data frame[1] had both game and real hitting data for “Derek Jeter”.  
+Once real data was scraped into CSV files (again, one file for hitting and one for pitching), these were also put into their own data frames.  We then consolidated the information from the game hitting and real hitting data frames into the same data frame such that every row in the consolidated hitting data frame had all the relevant information for the same player.  For example, the first row of the hitting data frame had both game and real hitting data for “Derek Jeter”.  
 
 We then proceeded to remove all players from the consolidated hitting data frame that had either 0 at-bats (AB) in the game or 0 AB in real life. For these players, we had no good way to analyze or evaluate how well APBA was representing them.  
 
@@ -91,15 +91,75 @@ For players with 0 AB in real life, there was nothing to compare game data to.  
 
 Once these rows were removed from the consolidated hitting data frame, we looked at the remaining rows (each row representing a player) and proceeded to calculate how many of each interesting statistic the player should have had in the board game in order to be completely real-life accurate.  Statistics we thought were interesting were hits (H), total bases (TB), runs (R), runs batted in (RBI), doubles (2B), triples (3B), homeruns (HR), and stolen bases (SB).  
 
-Batting average (AVG) is a derived statistic equal to H / AB while slugging percentage (SLG) is a derived statistic equal to TB / AB.  This means that AVG$\times$AB = H and SLG$\times$AB = TB, so, to get the number of H a player should have had in the game, we multiply his real-life AVG with the number of AB he had in the game.  Similarly, to get the number of TB a player should have had in the game, we multiply his real-life SLG with the number of AB he had in the game.
+Batting average (AVG) is a derived statistic equal to H / AB while slugging percentage (SLG) is a derived statistic equal to TB / AB.  This means that AVG$\times$AB = H and SLG$\times$AB = TB, so, to get the number of H a player should have had in the game, we multiply his real-life AVG with the number of AB he had in the game.  Similarly, to get the number of TB a player should have had in the game, we multiply his real-life SLG with the number of AB he had in the game. Here’s the lines from our code that do this (where rhdf2 is our data frame):
 
-(?)Although not derived statistics typically used in baseball, we can make our own version of AVG and SLG for the other statistics, based on either AB or games played (G) as seemed appropriate.
+```{r, echo=TRUE, eval=FALSE}
 
-Now, for each hitter, we have the expected number of H, TB, R, RBI, 2B, 3B, HR, and SB he should have had in the game and the actual number of H, TB, R, RBI, 2B, 3B, HR, and SB he had in the game.  Therefore, we can find the deviation from reality for each of these statistics by taking the difference between game and expected versions.  
+rhdf2$H_should_have = rhdf2$AVG * rhdf2$GameAB
+rhdf2$TB_should_have = rhdf2$SLG * rhdf2$GameAB
 
-Now for pitchers, the entire process is quite similar.  We consolidated the information from the game pitching and real pitching data frames into the same data frame such that every row in the consolidated data frame had all the relevant information for the same pitcher.  For example, pitching data frame[1] had both game and real pitching data for “Brian Bohanon”.   
+```
 
-For pitchers, we look at the number of innings pitched (IP) or games pitched (G) in the game to determine how many of the other statistics pitchers should have.  The standard baseball derived statistic, “earned run average” (ERA), can be used with IP to determine how many earned runs (ER) the player should have.  Once again, we make up our own similarly derived statistics to determine how many of the other pitching statistics pitchers should have.
+We can make our own version of AVG and SLG for the other statistics, based on either AB or games played (G) as seemed appropriate (examples: (real-life doubles) / (real-life at-bats) and (real-life stolen bases) / (real-life games)). Once again, here’s the lines from our code:
+
+```{r, echo=TRUE, eval=FALSE}
+
+rhdf2$R_should_have = rhdf2$R / rhdf2$G * rhdf2$GameG
+rhdf2$RBI_should_have = rhdf2$RBI / rhdf2$G * rhdf2$GameG
+rhdf2$"2B_should_have" = rhdf2$"2B" / rhdf2$AB * rhdf2$GameAB
+rhdf2$"3B_should_have" = rhdf2$"3B" / rhdf2$AB * rhdf2$GameAB
+rhdf2$HR_should_have = rhdf2$HR / rhdf2$AB * rhdf2$GameAB
+rhdf2$SB_should_have = rhdf2$SB / rhdf2$G * rhdf2$GameG
+
+```
+
+Now, for each hitter, we have the expected number of H, TB, R, RBI, 2B, 3B, HR, and SB he should have had in the game and the actual number of H, TB, R, RBI, 2B, 3B, HR, and SB he had in the game.  Therefore, we can find the deviation from reality for each of these statistics by taking the difference between game and expected versions as follows:  
+
+```{r, echo=TRUE, eval=FALSE}
+
+rhdf2$H_deviation = rhdf2$GameH - rhdf2$H_should_have
+rhdf2$TB_deviation = rhdf2$GameTB - rhdf2$TB_should_have
+rhdf2$R_deviation = rhdf2$GameR - rhdf2$R_should_have
+rhdf2$RBI_deviation = rhdf2$GameRBI - rhdf2$RBI_should_have
+rhdf2$"2B_deviation" = rhdf2$Game2B - rhdf2$"2B_should_have"
+rhdf2$"3B_deviation" = rhdf2$Game3B - rhdf2$"3B_should_have"
+rhdf2$HR_deviation = rhdf2$GameHR - rhdf2$HR_should_have
+rhdf2$SB_deviation = rhdf2$GameSB - rhdf2$SB_should_have
+
+
+```
+
+
+Now for pitchers, the entire process is quite similar.  We consolidated the information from the game pitching and real pitching data frames into the same data frame such that every row in the consolidated data frame had all the relevant information for the same pitcher.  For example, the first row of the pitching data frame had both game and real pitching data for “Brian Bohanon”.   
+
+For pitchers, we look at the number of innings pitched (IP) or games pitched (G) in the game to determine how many of the other statistics pitchers should have.  The standard baseball derived statistic, “earned run average” (ERA), can be used with IP to determine how many earned runs (ER) the player should have.  Once again, we make up our own similarly derived statistics to determine how many of the other pitching statistics pitchers should have. Here’s the lines from our code:  
+
+```{r, echo=TRUE, eval=FALSE}
+
+rpdf$ER_should_have = rpdf$ERA * rpdf$GameIP / 9
+rpdf$Hits_should_have = rpdf$H / rpdf$IP * rpdf$GameIP
+rpdf$SO_should_have = rpdf$SO / rpdf$IP * rpdf$GameIP
+rpdf$W_should_have = rpdf$W / rpdf$G * rpdf$GameG
+rpdf$L_should_have = rpdf$L / rpdf$G * rpdf$GameG
+rpdf$SV_should_have = rpdf$SV / rpdf$G * rpdf$GameG
+rpdf$BB_should_have = rpdf$BB / rpdf$IP * rpdf$GameIP
+
+```
+
+And here’s the lines from our code for calculating the deviation for each pitcher:
+
+```{r, echo=TRUE, eval=FALSE}
+
+rpdf$ER_deviation = rpdf$GameER - rpdf$ER_should_have
+rpdf$Hits_deviation = rpdf$GameHits - rpdf$Hits_should_have
+rpdf$SO_deviation = rpdf$GameSO - rpdf$SO_should_have
+rpdf$W_deviation = rpdf$GameW - rpdf$W_should_have
+rpdf$L_deviation = rpdf$GameL - rpdf$L_should_have
+rpdf$SV_deviation = rpdf$GameSV - rpdf$SV_should_have
+rpdf$BB_deviation = rpdf$GameBB - rpdf$BB_should_have
+
+```
+
 
 ```{r}
 
