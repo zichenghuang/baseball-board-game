@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 3 Data transformation | YOUR TITLE HERE</title>
-  <meta name="description" content="Chapter 3 Data transformation | YOUR TITLE HERE" />
+  <title>Chapter 3 Data transformation | How well does the APBA baseball board game model reality?</title>
+  <meta name="description" content="Chapter 3 Data transformation | How well does the APBA baseball board game model reality?" />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 3 Data transformation | YOUR TITLE HERE" />
+  <meta property="og:title" content="Chapter 3 Data transformation | How well does the APBA baseball board game model reality?" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 3 Data transformation | YOUR TITLE HERE" />
+  <meta name="twitter:title" content="Chapter 3 Data transformation | How well does the APBA baseball board game model reality?" />
   
   
   
@@ -24,7 +24,7 @@
 <meta name="author" content="Barbara Bettencourt, Gregor Hanuschak, Zicheng Huang" />
 
 
-<meta name="date" content="2021-04-09" />
+<meta name="date" content="2021-04-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -143,6 +143,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="3.1" data-path="data-transformation.html"><a href="data-transformation.html#web-scrapped-batting-table"><i class="fa fa-check"></i><b>3.1</b> Web Scrapped Batting Table</a></li>
 <li class="chapter" data-level="3.2" data-path="data-transformation.html"><a href="data-transformation.html#web-scrapped-pitching-table"><i class="fa fa-check"></i><b>3.2</b> Web Scrapped Pitching Table</a></li>
+<li class="chapter" data-level="3.3" data-path="data-transformation.html"><a href="data-transformation.html#cleaning-the-combined-data"><i class="fa fa-check"></i><b>3.3</b> Cleaning the Combined Data</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="missing-values.html"><a href="missing-values.html"><i class="fa fa-check"></i><b>4</b> Missing values</a></li>
 <li class="chapter" data-level="5" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>5</b> Results</a></li>
@@ -159,7 +160,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">YOUR TITLE HERE</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">How well does the APBA baseball board game model reality?</a>
           </h1>
         </div>
 
@@ -169,6 +170,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="data-transformation" class="section level1" number="3">
 <h1><span class="header-section-number">Chapter 3</span> Data transformation</h1>
+<p>For our scoresheet data, when we were done tabulating all the statistics for all the players in Excel, we exported each tab into a CSV file and then read those CSV files into R Studio. We made one data frame to hold the hitting statistics and one data frame to hold the pitching statistics.<br />
+There was some minor data cleanup to do for these data frames. There were many cells in Excel that were purposely left empty. For example, if a hitter never had a homerun in APBA baseball, that cell would have been left blank during the tabulation process, but the blank cell really represented a “0”.
+When you import into R Studio from a CSV however, these blanks cells turn into “NA”s, so we needed to use R Studio commands to turn these NAs into the 0s they represent.</p>
 <div id="web-scrapped-batting-table" class="section level2" number="3.1">
 <h2><span class="header-section-number">3.1</span> Web Scrapped Batting Table</h2>
 <p>We need to add the following calculated fields into the web scrapped batting data to better measure the performance of the hitters:</p>
@@ -229,6 +233,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##  $ HBP        : num [1:83] 1 19 7 1 4 1 2 4 7 1 ...
 ##  $ WP         : num [1:83] 1 3 7 0 7 4 2 8 6 3 ...
 ##  $ BK         : num [1:83] 0 1 0 0 0 0 0 0 1 0 ...</code></pre>
+</div>
+<div id="cleaning-the-combined-data" class="section level2" number="3.3">
+<h2><span class="header-section-number">3.3</span> Cleaning the Combined Data</h2>
+<p>Once real data was scraped into CSV files (again, one file for hitting and one for pitching), these were also put into their own data frames. We then consolidated the information from the game hitting and real hitting data frames into the same data frame such that every row in the consolidated hitting data frame had all the relevant information for the same player. For example, hitting data frame[1] had both game and real hitting data for “Derek Jeter”.</p>
+<p>We then proceeded to remove all players from the consolidated hitting data frame that had either 0 at-bats (AB) in the game or 0 AB in real life. For these players, we had no good way to analyze or evaluate how well APBA was representing them.</p>
+<p>For players with 0 AB in the game, there was nothing to compare against real life. In the game, these players were mainly relief pitchers. Relief pitchers do hit, but it’s rare, and such players didn’t pitch in enough games to eventually get the chance to hit.</p>
+<p>For players with 0 AB in real life, there was nothing to compare game data to. In real life, these players were all pitchers in the American League since, in the American League, pitchers never hit and instead have another player designated to hit for them (a so-called “designated hitter”).</p>
+<p>Once these rows were removed from the consolidated hitting data frame, we looked at the remaining rows (each row representing a player) and proceeded to calculate how many of each interesting statistic the player should have had in the board game in order to be completely real-life accurate. Statistics we thought were interesting were hits (H), total bases (TB), runs (R), runs batted in (RBI), doubles (2B), triples (3B), homeruns (HR), and stolen bases (SB).</p>
+<p>Batting average (AVG) is a derived statistic equal to H / AB while slugging percentage (SLG) is a derived statistic equal to TB / AB. This means that AVG<span class="math inline">\(\times\)</span>AB = H and SLG<span class="math inline">\(\times\)</span>AB = TB, so, to get the number of H a player should have had in the game, we multiply his real-life AVG with the number of AB he had in the game. Similarly, to get the number of TB a player should have had in the game, we multiply his real-life SLG with the number of AB he had in the game.</p>
+<p>(?)Although not derived statistics typically used in baseball, we can make our own version of AVG and SLG for the other statistics, based on either AB or games played (G) as seemed appropriate.</p>
+<p>Now, for each hitter, we have the expected number of H, TB, R, RBI, 2B, 3B, HR, and SB he should have had in the game and the actual number of H, TB, R, RBI, 2B, 3B, HR, and SB he had in the game. Therefore, we can find the deviation from reality for each of these statistics by taking the difference between game and expected versions.</p>
+<p>Now for pitchers, the entire process is quite similar. We consolidated the information from the game pitching and real pitching data frames into the same data frame such that every row in the consolidated data frame had all the relevant information for the same pitcher. For example, pitching data frame[1] had both game and real pitching data for “Brian Bohanon”.</p>
+<p>For pitchers, we look at the number of innings pitched (IP) or games pitched (G) in the game to determine how many of the other statistics pitchers should have. The standard baseball derived statistic, “earned run average” (ERA), can be used with IP to determine how many earned runs (ER) the player should have. Once again, we make up our own similarly derived statistics to determine how many of the other pitching statistics pitchers should have.</p>
 
 </div>
 </div>

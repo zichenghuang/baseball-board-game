@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 4 Missing values | YOUR TITLE HERE</title>
-  <meta name="description" content="Chapter 4 Missing values | YOUR TITLE HERE" />
+  <title>Chapter 4 Missing values | How well does the APBA baseball board game model reality?</title>
+  <meta name="description" content="Chapter 4 Missing values | How well does the APBA baseball board game model reality?" />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 4 Missing values | YOUR TITLE HERE" />
+  <meta property="og:title" content="Chapter 4 Missing values | How well does the APBA baseball board game model reality?" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 4 Missing values | YOUR TITLE HERE" />
+  <meta name="twitter:title" content="Chapter 4 Missing values | How well does the APBA baseball board game model reality?" />
   
   
   
@@ -24,7 +24,7 @@
 <meta name="author" content="Barbara Bettencourt, Gregor Hanuschak, Zicheng Huang" />
 
 
-<meta name="date" content="2021-04-09" />
+<meta name="date" content="2021-04-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -143,6 +143,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="3.1" data-path="data-transformation.html"><a href="data-transformation.html#web-scrapped-batting-table"><i class="fa fa-check"></i><b>3.1</b> Web Scrapped Batting Table</a></li>
 <li class="chapter" data-level="3.2" data-path="data-transformation.html"><a href="data-transformation.html#web-scrapped-pitching-table"><i class="fa fa-check"></i><b>3.2</b> Web Scrapped Pitching Table</a></li>
+<li class="chapter" data-level="3.3" data-path="data-transformation.html"><a href="data-transformation.html#cleaning-the-combined-data"><i class="fa fa-check"></i><b>3.3</b> Cleaning the Combined Data</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="missing-values.html"><a href="missing-values.html"><i class="fa fa-check"></i><b>4</b> Missing values</a></li>
 <li class="chapter" data-level="5" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>5</b> Results</a></li>
@@ -159,7 +160,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">YOUR TITLE HERE</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">How well does the APBA baseball board game model reality?</a>
           </h1>
         </div>
 
@@ -169,7 +170,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="missing-values" class="section level1" number="4">
 <h1><span class="header-section-number">Chapter 4</span> Missing values</h1>
-<p>Missing values can complicate data exploration, therefore our aim is to find and remove them. We use a R command that shows how many NA values are in each column of both the batting and pitching data.</p>
+<p>Missing values can complicate data exploration, therefore our aim is to find and remove them. After replacing the appropriate NA’s with 0, we use an R command that shows how many NA values are in each column of both the batting and pitching data.</p>
 <pre><code>##        playerID            name            hits             AVG             SLG 
 ##               0               0               0               0               0 
 ##             OBA               G              AB               R               H 
@@ -212,7 +213,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##                0                0                0                0 
 ##     SV_deviation     BB_deviation 
 ##                0                0</code></pre>
-<p>We can see that there are no NA values in either of the data sets, hence there is no missing data.
+<p>As expected, we see that there are no NA values in either of the data sets, hence there is no missing data.
 Plotting the two data sets asserts this.</p>
 <p><img src="finalproj_files/figure-html/unnamed-chunk-18-1.png" width="672" /><img src="finalproj_files/figure-html/unnamed-chunk-18-2.png" width="672" /><img src="finalproj_files/figure-html/unnamed-chunk-18-3.png" width="672" /><img src="finalproj_files/figure-html/unnamed-chunk-18-4.png" width="672" /></p>
 
