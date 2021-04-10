@@ -4,7 +4,7 @@ Our data sources are:
 - Scoresheets from approximately 100 games of APBA Baseball  
 - Real-life statistics www.baseball-reference.com    
 
-(picture)
+![](data/screenshot/Scoresheet.jpg)
 
 Above is a picture of an APBA baseball scoresheet.  The top half of the scoresheet is dedicated to hitting.  Left and right sides of the top half of the scoresheet show the starting lineups for the visiting and home teams respectively as well as any substitutes that came into the game.  For each player, hitting statistics such as atbats, runs, hits, etc. are recorded whenever the player gets a chance to hit.  Similarly, the bottom half of the scoresheet is dedicated to pitching.  
 

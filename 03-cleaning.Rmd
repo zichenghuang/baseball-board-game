@@ -1,6 +1,7 @@
 # Data transformation
 
 For our scoresheet data, when we were done tabulating all the statistics for all the players in Excel, we exported each tab into a CSV file and then read those CSV files into R Studio.  We made one data frame to hold the hitting statistics and one data frame to hold the pitching statistics.  
+  
 There was some minor data cleanup to do for these data frames.  There were many cells in Excel that were purposely left empty.  For example, if a hitter never had a homerun in APBA baseball, that cell would have been left blank during the tabulation process, but the blank cell really represented a “0”.
 When you import into R Studio from a CSV however, these blanks cells turn into “NA”s, so we needed to use R Studio commands to turn these NAs into the 0s they represent.  
 
