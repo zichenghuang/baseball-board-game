@@ -6,7 +6,7 @@ library(ggplot2)
 library(visdat)
 library(naniar)
 ```
-Missing values can complicate data exploration, therefore our aim is to find and remove them. We use a R command that shows how many NA values are in each column of both the batting and pitching data.
+Missing values can complicate data exploration, therefore our aim is to find and remove them. After replacing the appropriate NA's with 0, we use an R command that shows how many NA values are in each column of both the batting and pitching data.
 
 ```{r}
 
@@ -26,7 +26,8 @@ colSums(is.na(combh)) #hitting\batting data
 colSums(is.na(combp)) #pitching data
 
 ```
-We can see that there are no NA values in either of the data sets, hence there is no missing data.
+
+As expected, we see that there are no NA values in either of the data sets, hence there is no missing data.
 Plotting the two data sets asserts this.
 
 ```{r}

@@ -1,6 +1,16 @@
 # Data sources
 
-Our data sources are www.baseball-reference.com for the real-life statistics and approximately 100 games of scoresheets from APBA Baseball.
+Our data sources are:   
+- Scoresheets from approximately 100 games of APBA Baseball  
+- Real-life statistics www.baseball-reference.com    
+
+(picture)
+
+Above is a picture of an APBA baseball scoresheet.  The top half of the scoresheet is dedicated to hitting.  Left and right sides of the top half of the scoresheet show the starting lineups for the visiting and home teams respectively as well as any substitutes that came into the game.  For each player, hitting statistics such as atbats, runs, hits, etc. are recorded whenever the player gets a chance to hit.  Similarly, the bottom half of the scoresheet is dedicated to pitching.  
+
+Using the statistics from about 100 of these scoresheets, we used Excel to create a spreadsheet to keep track of all the hitting and pitching statistics from all of the APBA baseball games.  We had one tab in the spreadsheet for hitting and one tab in the spreadsheet for pitching.  
+
+This was a bit of a painstaking process.  For each scoresheet, we would look at each player’s name, find that player’s name in the Excel sheet (or add the player’s name to the Excel sheet if it wasn’t there), increment each statistic in the Excel sheet with the player’s performance from the scoresheet, and repeat this process for every player in every scoresheet.  
 
 In order to extract the data needed from [Baseball Reference](https://www.baseball-reference.com), we performed web scraping to pull the batting and pitching data in the year 1998 for the players that appear in the 100 games of APBA Baseball.
 
