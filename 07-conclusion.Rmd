@@ -1,2 +1,10 @@
 # Conclusion
 
+At a macro level, we found that baseball players in the APBA baseball game consistently have near expected performance at least 50% of the time for every statistic tested.  This holds true for both player hitting and player pitching, although it did particularly well for hitting.
+
+Along the way, we also learned that:     
+1.) left-handed batters tend to get in more games than right-handed batters   
+2.) that right-handed pitchers tend to get more wins on average than left-handed pitchers.    
+The first fact could potentially be explained by the fact that there are more right-handed pitchers in baseball than left-handed pitchers and, further, that left-handed batters tend to hit better against these right-handed pitchers than right-handed batters do.  Hence there's a lot of incentive to play the left-handed batters more often since a right-handed pitcher is often on the mound pitching.  The second fact, however, about right-handers getting more wins on average, is quite unexpected and worth of further study.
+
+On a more micro level, we found that APBA did much better at emulating the performance of right-handed pitchers than left-handed pitchers.  It is also worth further investigate to determine why that might be.
