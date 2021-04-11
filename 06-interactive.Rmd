@@ -202,4 +202,14 @@ d3.csv("https://raw.githubusercontent.com/zichenghuang/baseball-board-game/main/
 
 </script>
 
-We created this plot with the aid of ([ref](https://www.d3-graph-gallery.com/graph/boxplot_horizontal.html)). 
+For our interactive component, we wanted to see if APBA did a better job at modeling left-handed pitchers or right-handed pitchers.  We chose earned runs given up (ER) as an example statistic and again looked at the ER deviation from what was expected.  Also, we again chose to use box and whisker plots.
+
+We found that APBA did quite a bit better at modeling right-handed pitchers.  This is evidenced by a smaller-width box which is much more centered on 0.  It appears 50% of right-handed pitchers gave up within just a few ER of what was expected.  Meanwhile, the box representing 50% of left-handed pitchers was not well centered on 0.  It's possible our sample set had lots of players that hit left-handed pitchers well, but from the data we have, it appears APBA biases left-handed pitchers such that they often give up more runs than expected.  Furthermore, not only is box not well centered, but it is also wide.  This means the box representing 50% of left-handed pitchers includes pitchers that gave up as many as 10 runs more than expected!
+
+Note that we chose to make this interactive because we wanted to see immediately which pitchers over-performed or under-performed compared to what was expected.  Hovering over points in the plots allows you to see exactly that.  When you hover over a point and look below the plot (below the bottom axis label, you may have to zoom out), you see the name of the pitcher the point represents and the ER deviation of his performance compared to what is expected (positive or negative).
+
+We considered showing the pitcher name and ER deviation in the middle of the plot when you hover, but we didn’t want to cover other points when showing the information.
+
+
+This plot was created with the aid of ([ref](https://www.d3-graph-gallery.com/graph/boxplot_horizontal.html)). 
+
