@@ -8,7 +8,7 @@ library(ggplot2)
 cbat <- read.csv('data/combined/Batting.csv')
 cpit <- read.csv('data/combined/Pitching.csv')
 
-ggplot(cbat, aes(x=H_deviation)) + geom_boxplot(fill='darkred', color="red3") + labs(title = 'Difference between batter hits in the game vs. real life',x="Difference of hits")
+ggplot(cbat, aes(x=H_deviation)) + geom_boxplot(fill='darkred', color="red3") + labs(title = 'Difference between Batter Hits in the Game vs. Real Life',x="Difference of Hits") + theme(text = element_text(size=15))
 
 ```
 
@@ -18,7 +18,7 @@ Looking at the players representing the outliers, even some of these can be expl
 
 ```{r}
 
-ggplot(cbat, aes(x=TB_deviation)) + geom_boxplot(fill='pink1', color="mediumpurple3") + labs(title = 'Difference between batter total bases in the game vs. real life',x="Difference of Total Bases")
+ggplot(cbat, aes(x=TB_deviation)) + geom_boxplot(fill='pink1', color="mediumpurple3") + labs(title = 'Difference between Batter Total Bases in the Game vs. Real Life',x="Difference of Total Bases") + theme(text = element_text(size=13))
 
 ```
 
@@ -30,7 +30,7 @@ Once again, further investigation is necessary, but it may be that outliers with
 
 ```{r}
 
-ggplot(cpit, aes(x=ER_deviation)) + geom_boxplot(fill='cyan1', color="darkcyan") + labs(title = 'Difference between pitcher runs given up in the game vs. real life', x="Difference of runs given up")
+ggplot(cpit, aes(x=ER_deviation)) + geom_boxplot(fill='cyan1', color="darkcyan") + labs(title = 'Difference between Pitcher Runs Given Up in the Game vs. Real Life', x="Difference of Runs Given Up")+ theme(text = element_text(size=12.5))
 
 ```
 
@@ -41,7 +41,7 @@ Mark Portugal of the Phillies represents the biggest outlier.  He gave up more t
 
 ```{r}
 
-ggplot(cpit, aes(x=Hits_deviation)) + geom_boxplot(fill='gold', color="grey18") + labs(title = 'Difference between pitcher hits given up in the game vs. real life', x="Difference of hits given up")
+ggplot(cpit, aes(x=Hits_deviation)) + geom_boxplot(fill='gold', color="grey18") + labs(title = 'Difference between Pitcher Hits Given Up in the Game vs. Real Life', x="Difference of Hits Given Up")+ theme(text = element_text(size=13))
 
 ```
 
@@ -52,17 +52,29 @@ The most extreme outlier on the plot represents Brian Bohanon.  Looking at the p
 
 ```{r}
 
-ggplot(cpit, aes(x=SO_deviation)) + geom_boxplot(fill='palegreen', color="springgreen4") + labs(title = 'Difference between pitcher strikeouts in the game vs. real life', x="Difference of strikeouts")
+ggplot(cpit, aes(x=SO_deviation)) + geom_boxplot(fill='palegreen', color="springgreen4") + labs(title = 'Difference between Pitcher Strikeouts in the Game vs. Real Life', x="Difference of Strikeouts")+ theme(text = element_text(size=13))
 
 ```
 
 50% of pitchers in the game had within a couple strikeouts of what was expected and, once again, the box is fairly well centered on 0. APBA continues to impress.
 
 ```{r}
-
+library(tidyverse)
 library(GGally)
 
-ggparcoord(data = cbat, columns = c(40, 41, 42, 43, 44, 45, 46, 47), scale="uniminmax", splineFactor = 10, alphaLines = 0.3, title = "Parallel Coordinate plot for Hitting Statistics") + xlab("") + ylab("") 
+cbat <- cbat %>%
+  rename(
+    H_dev = H_deviation,
+    TB_dev = TB_deviation,
+    R_dev = R_deviation,
+    RBI_dev = RBI_deviation,
+    X2B_dev = X2B_deviation,
+    X3B_dev = X3B_deviation,
+    HR_dev = HR_deviation,
+    SB_dev = SB_deviation
+  )
+
+ggparcoord(data = cbat, columns = c(40, 41, 42, 43, 44, 45, 46, 47), scale="uniminmax", splineFactor = 10, alphaLines = 0.3, title = "Parallel Coordinate Plot for Hitting Statistics") + xlab("") + ylab("") + theme(text = element_text(size=14))
 
 ```
 
@@ -72,7 +84,17 @@ You’ll note a fairly dark curve here indicating a great many players have abou
 
 ```{r}
 
-ggparcoord(data = cpit, columns = c(35, 36, 37, 38, 39, 40, 41), scale="uniminmax", splineFactor = 10, alphaLines = 0.3, title = "Parallel Coordinate plot for Pitching Statistics") + xlab("") + ylab("")
+cpit <- cpit %>%
+  rename(
+    ER_dev = ER_deviation,
+    Hits_dev = Hits_deviation,
+    SO_dev = SO_deviation,
+    W_dev = W_deviation,
+    L_dev = L_deviation,
+    SV_dev = SV_deviation,
+  )
+
+ggparcoord(data = cpit, columns = c(35, 36, 37, 38, 39, 40, 41), scale="uniminmax", splineFactor = 10, alphaLines = 0.3, title = "Parallel Coordinate plot for Pitching Statistics") + xlab("") + ylab("") + theme(text = element_text(size=14))
 
 ```
 
@@ -81,7 +103,7 @@ It appears that SV_deviation is the most consistent of all the pitching statisti
 
 ```{r}
 
-ggplot(cbat, aes(x=hits,y=H, color=hits)) +geom_point()+ ggtitle("Number of real batter hits by dominant hand")+labs(x="Dominant Hand",y="Hits")
+ggplot(cbat, aes(x=hits,y=H, color=hits)) +geom_point()+ ggtitle("Number of Real Batter Hits by Dominant Hand")+labs(x="Dominant Hand",y="Hits")+ theme(text = element_text(size=14))
 
 ```
 
@@ -90,7 +112,7 @@ For each dominant hand there seems to exist similar gaps between hits but overal
 
 ```{r}
 
-ggplot(cpit, aes(x=throws,y=H, color=throws)) +geom_point()+ ggtitle("Number of real pitcher hits by dominant hand")+labs(x="Dominant Hand", y="Hits")
+ggplot(cpit, aes(x=throws,y=H, color=throws)) +geom_point()+ ggtitle("Number of Real Pitcher Hits by Dominant Hand")+labs(x="Dominant Hand", y="Hits")+ theme(text = element_text(size=14))
 
 ```
 
@@ -102,7 +124,7 @@ In the real pitchers data we have the same issue as before, where we have more d
 #violin plot
 
 hands <- c("Both","Left","Right")
-ggplot(cbat, aes(x=factor(hits,levels = hands),y=G))+geom_violin(fill="lightblue",color="black")+labs(x="Dominant Hand",y="Games",title = "Violin plot of real number of games played by a batter by dominant hand")+geom_boxplot(width=0.1)
+ggplot(cbat, aes(x=factor(hits,levels = hands),y=G))+geom_violin(fill="lightblue",color="black")+labs(x="Dominant Hand",y="Games",title = "Violin plot of Real Number of Games Played by a Batter by Dominant Hand")+geom_boxplot(width=0.1)+ theme(text = element_text(size=11.5))
 
 ```
 
@@ -113,7 +135,7 @@ We should also note that the first quantile for the players who play with both h
 ```{r}
 
 hands <- c("Left","Right")
-ggplot(cpit, aes(x=factor(throws,levels = hands),y=W))+geom_violin(fill="plum2",color="black")+labs(x="Dominant Hand",y="Wins",title = "Violin plot of real number of wins by a pitcher by dominant hand")+geom_boxplot(width=0.1)
+ggplot(cpit, aes(x=factor(throws,levels = hands),y=W))+geom_violin(fill="plum2",color="black")+labs(x="Dominant Hand",y="Wins",title = "Violin plot of Real Number of Wins by a Pitcher by Dominant Hand")+geom_boxplot(width=0.1)+ theme(text = element_text(size=13))
 
 ```
 

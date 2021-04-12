@@ -31,9 +31,13 @@ As expected, we see that there are no NA values in either of the data sets, henc
 Plotting the two data sets asserts this.
 
 ```{r}
-vis_miss(combh)
-vis_miss(combp)
+vis_miss(combh) + 
+  labs(title = "Missingness of Batting Data")
+vis_miss(combp)+ 
+  labs(title = "Missingness of Pitching Data")
 
-gg_miss_var(combh)
-gg_miss_var(combp)
+gg_miss_var(combh)+ 
+  labs(title = "Missingness of Batting Data")
+gg_miss_var(combp)+ 
+  labs(title = "Missingness of Pitching Data")
 ```
